@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quantum-directional-signalling"
+version = "0.1.0"
+description = "Exact diamond-norm certificates for directional quantum signalling"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "CC-BY-4.0"}
+authors = [
+  {name = "Richard Astbury", email = "richard.astbury@gmail.com"},
+]
+keywords = [
+  "quantum information",
+  "diamond norm",
+  "directional signalling",
+  "partial swap",
+  "iswap",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.urls]
+Repository = "https://github.com/richorama/quantum-directional-signalling"
+
+[tool.setuptools.packages.find]
+include = ["quantum_coarse_graining*"]

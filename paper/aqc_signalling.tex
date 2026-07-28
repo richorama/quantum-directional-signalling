@@ -1,0 +1,817 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,
+            urlcolor=blue!55!black,breaklinks=true]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\diamondnorm}[1]{\left\lVert #1\right\rVert_{\diamond}}
+\newcommand{\tracenorm}[1]{\left\lVert #1\right\rVert_{1}}
+\newcommand{\SWAP}{\mathrm{SWAP}}
+
+\hypersetup{
+  pdftitle={Exact directional signalling for Ising, partial-SWAP, and XY unitary families},
+  pdfauthor={Richard Astbury},
+  pdfkeywords={quantum signalling; diamond norm; partial SWAP; Ising interaction;
+               quantum channels; semidefinite programming}
+}
+
+\title{\bfseries Exact directional signalling for Ising,
+partial-SWAP, and XY unitary families}
+
+\author{Richard Astbury\thanks{Contact:
+\href{mailto:richard.astbury@gmail.com}{richard.astbury@gmail.com}.
+Developed with the assistance of AI tools. The author is solely responsible
+for all claims, proofs, code, and errors.}}
+
+\date{Draft of 23 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a bipartite unitary $U$ on $A\otimes B$, directional signalling from
+$B$ to $A$ is the diamond-norm distance
+\[
+ \delta_A(U)=\inf_{\cE\ {\rm CPTP}}
+ \diamondnorm{\Tr_B\!\circ\Ad_U-\cE\circ\Tr_B}.
+\]
+This quantity was introduced by Barsse, Perinotti, Tosini, and Vaglini.
+Exact values were subsequently obtained for the CNOT and SWAP gates, but
+continuous interacting families have not been evaluated.  We give three such
+evaluations.  First, for the two-qubit Ising family
+$U_\theta=\exp(-i\theta Z\otimes Z)$, we prove
+$\delta_A(U_\theta)=|\sin 2\theta|$ and identify an optimal dephasing channel.
+Second, for the partial-SWAP family on $\mathbb{C}^d\otimes\mathbb{C}^d$,
+$U_\phi=\cos\phi\,I-i\sin\phi\,\SWAP$, unitary covariance reduces the
+optimization to one depolarizing parameter $\lambda$.  We evaluate the
+fixed-$\lambda$ diamond norm in closed form and thereby reduce the full
+problem to a scalar convex minimization.  In the weak-interaction regime
+$0\leq\sin\phi\leq(d^2-3)/(d^2-1)$, the result simplifies to
+$\delta_A(U_\phi)=2\sin\phi$; beyond this dimension-dependent threshold the
+optimal effective channel moves away from the identity, reaching the known
+SWAP value $2(1-1/d^2)$.
+Third, for the XY line $e^{-i\theta(XX+YY)}$, axial covariance gives an exact
+two-parameter min--max formula and two closed branches.  Writing
+$S=\sin2\theta$, the weak branch is $\sin4\theta$, while near iSWAP the value is
+$S+S^2/2$, reaching $3/2$ at iSWAP.  The intervening branch is characterized
+by the same finite-dimensional saddle but is not assigned an elementary
+closed form.
+The proofs include matching operational witnesses.  We also distinguish
+these diamond-norm results from Hilbert--Schmidt operator-entanglement
+measures and provide exact-arithmetic computational certificates.
+\end{abstract}
+
+\noindent\textbf{Keywords:} directional signalling; diamond norm;
+partial SWAP; iSWAP; Ising interaction; covariant quantum channels.
+
+\section{Introduction}
+
+An interacting microscopic evolution need not induce autonomous dynamics on
+a subsystem.  Given a unitary channel $\Ad_U$ on $A\otimes B$, one may ask how
+well the reduced output on $A$ can be simulated from the reduced input on $A$
+alone.  The operational answer is
+\begin{equation}
+ \delta_A(U)
+ =\inf_{\cE\in\mathrm{CPTP}(A)}
+   \diamondnorm{\Tr_B\circ\Ad_U-\cE\circ\Tr_B}.
+ \label{eq:defect}
+\end{equation}
+The optimization includes arbitrary $AB$ correlations and arbitrary reference
+systems through the diamond norm.
+
+Equation~\eqref{eq:defect} is not a new measure.  After exchanging subsystem
+labels, it is exactly the directional-signalling quantity introduced in
+Ref.~\cite{barsse2024}.  That work bounded the CNOT value; the follow-up
+Ref.~\cite{barsse2025} computed exact CNOT and SWAP values, including parallel
+and asymptotic uses.  Earlier work characterized causal and semicausal
+operations structurally~\cite{beckman2001,eggeling2002}, while continuity of
+Stinespring dilations supplies general non-sharp bounds~\cite{ksw2008}.
+
+The present contribution is deliberately narrower than a new causal measure.
+We compute Eq.~\eqref{eq:defect} sharply for three continuous unitary families.
+The Ising result extends the CNOT endpoint.  The partial-SWAP result covers an
+interaction used in homogenization and collision models
+\cite{ziman2002,scarani2002} and reveals the dimension-dependent transition
+$\sin\phi=(d^2-3)/(d^2-1)$.  The XY/iSWAP line supplies a less symmetric
+control: it exhibits two analytically closed regimes separated by an algebraic
+saddle.  A dedicated search found no previous evaluation of
+Eq.~\eqref{eq:defect} for any of these continuous families.
+
+The distinction from operator entanglement is important.  Hilbert--Schmidt
+distances and the linear entropy of a vectorized unitary are useful algebraic
+diagnostics~\cite{zanardi2001}, but they do not directly give operational
+channel distinguishability.  Every result below is stated in diamond norm and
+is accompanied by both an upper bound and a matching witness.
+
+\section{Preliminaries}
+
+Let $\cL(H)$ denote the operators on a finite-dimensional Hilbert space $H$.
+For a unitary $U$, write $\Ad_U(X)=UXU^\dagger$.  We use the unnormalized Choi
+operator
+\[
+ J(\Phi)=\sum_{j,k}\Phi(|j\rangle\langle k|)
+                 \otimes |j\rangle\langle k|.
+\]
+For Hermiticity-preserving $\Phi:\cL(X)\to\cL(Y)$, we use the Watrous
+semidefinite-program characterization~\cite{watrous2009,watrous2018}.
+In the unnormalized-Choi convention used here, its Hermiticity-preserving
+specialization is
+\begin{equation}
+ \diamondnorm{\Phi}
+ =\max_{\rho\in\mathrm{D}(X)}
+ \tracenorm{(I_Y\otimes\sqrt{\rho})J(\Phi)
+                     (I_Y\otimes\sqrt{\rho})}.
+ \label{eq:watrous}
+\end{equation}
+The maximizing $\rho$ specifies a physical witness through any purification.
+When $\Phi$ is covariant, averaging the complete primal feasible tuple over the
+symmetry group shows that an invariant maximizing density may be chosen.
+
+We use the maps
+\[
+ \cT=\Tr_B,\qquad \cN_U=\Tr_B\circ\Ad_U,
+\]
+so that $\delta_A(U)=\inf_\cE\diamondnorm{\cN_U-\cE\cT}$.
+Pre- and post-composition by unitary channels are diamond-norm isometries.
+
+\begin{lemma}[Covariant twirling]
+\label{lem:twirl}
+Suppose a compact group $G$ has unitary representations $H_g$ on $A\otimes B$
+and $G_g$ on $A$ such that
+\[
+ \cN_U\Ad_{H_g}=\Ad_{G_g}\cN_U,\qquad
+ \cT\Ad_{H_g}=\Ad_{G_g}\cT.
+\]
+Then some optimal effective channel in Eq.~\eqref{eq:defect} is covariant under
+$G_g$.
+\end{lemma}
+
+\begin{proof}
+For a candidate $\cE$, define
+$\cE_g=\Ad_{G_g^\dagger}\cE\Ad_{G_g}$.  Covariance gives
+\[
+ \cN_U-\cE_g\cT
+ =\Ad_{G_g^\dagger}(\cN_U-\cE\cT)\Ad_{H_g},
+\]
+so every $\cE_g$ has the same defect as $\cE$.  The Haar average
+$\overline{\cE}=\int_G\cE_g\,dg$ is CPTP and covariant.  Convexity of the
+diamond norm implies that its defect is no larger.
+\end{proof}
+
+\section{The Ising family}
+
+Let
+\[
+ U_\theta=e^{-i\theta Z\otimes Z}
+          =cI-is\,Z\otimes Z,\qquad c=\cos\theta,\quad s=\sin\theta.
+\]
+
+\begin{theorem}[Exact Ising signalling]
+\label{thm:ising}
+For two qubits,
+\begin{equation}
+ \delta_A(U_\theta)=|\sin 2\theta|=2|cs|.
+ \label{eq:ising-result}
+\end{equation}
+An optimal effective channel is
+\[
+ \cE_\theta(X)=c^2X+s^2ZXZ.
+\]
+\end{theorem}
+
+\begin{proof}
+Define
+\[
+ M(X)=\Tr_B[(I\otimes Z)X],\qquad
+ L(X)=-\frac{i}{2}[Z,M(X)].
+\]
+Expanding $U_\theta XU_\theta^\dagger$ and using cyclicity inside the partial
+trace gives
+\begin{equation}
+ \cN_{U_\theta}-\cE_\theta\cT
+ =2cs\,L.
+ \label{eq:ising-factor}
+\end{equation}
+The completely bounded trace norm of $M$ is one: its adjoint is the complete
+operator-norm isometry $Y\mapsto Y\otimes Z$.  Also
+$K\mapsto-i[Z,K]/2$ has completely bounded trace norm at most one by the
+triangle inequality for left and right unitary multiplication.  Hence
+$\diamondnorm{L}\leq1$, which proves the upper bound $2|cs|$.
+
+For the lower bound, consider
+\[
+ \rho_0=|+\rangle\langle+|_A\otimes|0\rangle\langle0|_B,\qquad
+ \rho_1=|+\rangle\langle+|_A\otimes|1\rangle\langle1|_B.
+\]
+They have the same $A$ marginal, so every candidate $\cE$ assigns them the
+same simulated output.  Their true reduced outputs differ by $2cs\,Y$, whose
+trace norm is $4|cs|$.  The triangle inequality therefore forces at least one
+of the two simulation errors to be at least $2|cs|$.  This matches the upper
+bound.
+\end{proof}
+
+At $\theta=\pi/4$, $U_\theta$ is locally equivalent to CZ and CNOT.
+Equation~\eqref{eq:ising-result} then reproduces the exact CNOT value one,
+already obtained in Ref.~\cite{barsse2025}.  The continuous formula, rather
+than that endpoint, is the result of Theorem~\ref{thm:ising}.
+
+\section{The partial-SWAP family in dimension \texorpdfstring{$d$}{d}}
+
+Let $A\cong B\cong\mathbb{C}^d$ and consider
+\begin{equation}
+ U_\phi=cI-isS,\qquad S=\SWAP,\qquad c=\cos\phi,\quad s=\sin\phi,
+ \label{eq:partial-swap}
+\end{equation}
+for $0\leq\phi\leq\pi/2$.  For qubits, the equal-angle Cartan interaction is
+this family up to global phase:
+\[
+ e^{-it(XX+YY+ZZ)}=e^{it}e^{-2itS},\qquad \phi=2t.
+\]
+
+\subsection{Reduction to depolarizing channels}
+
+The unitary $U_\phi$ commutes with $V\otimes V$ for every $V\in U(d)$.
+Lemma~\ref{lem:twirl} therefore permits an optimal effective channel to be
+chosen covariant under all unitary conjugations.  Every such channel is
+depolarizing:
+\begin{equation}
+ \cE_\lambda(X)
+ =\lambda X+(1-\lambda)\Tr(X)\frac{I}{d},
+ \qquad -\frac{1}{d^2-1}\leq\lambda\leq1.
+ \label{eq:depol}
+\end{equation}
+This interval is precisely the CPTP range.  Direct expansion gives
+\[
+ \cN_{U_\phi}(X)
+ =c^2\Tr_BX+s^2\Tr_AX-ics\,\Tr_B(SX-XS),
+\]
+where $\Tr_A X$ is relabelled onto the output copy of $A$.
+
+\subsection{The fixed-channel diamond norm}
+
+Define
+\begin{align}
+ A&=1-\lambda,&
+ B&=A^2+d^2\lambda s^2,\nonumber\\
+ H_0&=\frac{d(d^2-3)}{d^2-1},&
+ H_1&=\frac{2}{d^2-1}.
+ \label{eq:general-terms}
+\end{align}
+For $B>0$, also put
+\begin{equation}
+ Q=A^2(H_0^2-H_1^2)+4B,\quad
+ C=1-\frac{A^2H_1^2}{4B},\quad
+ D=\frac{AH_0+\sqrt Q}{C}.
+ \label{eq:general-D}
+\end{equation}
+
+\begin{lemma}[Fixed depolarizing channel in dimension $d$]
+\label{lem:fixed}
+Let
+\[
+ d_{d,\phi}(\lambda)
+ =\diamondnorm{\cN_{U_\phi}-\cE_\lambda\cT}.
+\]
+Apart from the identity point $B=0$, where the norm vanishes,
+\begin{equation}
+ d_{d,\phi}(\lambda)=
+ \begin{cases}
+  D/d, & AH_1D\leq4B,\\[2pt]
+  2A(H_0+H_1)/d, & AH_1D>4B.
+ \end{cases}
+ \label{eq:fixed-norm}
+\end{equation}
+The quantities $B$ and $C$ are positive and $Q$ is nonnegative on the CPTP
+interval away from that identity point, so the closed form is well defined.
+\end{lemma}
+
+\begin{proof}
+The Watrous SDP is invariant under the simultaneous $V\otimes V$ covariance
+action.  Averaging its complete primal feasible tuple therefore preserves both
+feasibility and objective value, and Schur--Weyl duality permits an optimal
+input density
+\[
+ \rho=xP_-+yP_+,\qquad r_-x+r_+y=1,
+ \quad r_\pm=\frac{d(d\pm1)}2.
+\]
+Let $u=r_+y$ be its total symmetric-subspace weight.  Put
+\[
+ P=\frac{(d-1)(d+2)}{d+1},\qquad
+ R=\frac{(d+1)(d-2)}{d-1},\qquad
+ \widetilde B=(1+\lambda)^2-4\lambda c^2.
+\]
+For
+\[
+ K_\rho=(I\otimes\sqrt\rho)
+ J(\cN_{U_\phi}-\cE_\lambda\cT)
+ (I\otimes\sqrt\rho),
+\]
+the Schur--Weyl blocks give the spectrum
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+eigenvalue & multiplicity\\
+\midrule
+$-(1-\lambda)y/d$ & $d(d-1)(d+2)/2$\\
+$-(1-\lambda)x/d$ & $d(d+1)(d-2)/2$\\
+$\nu_+,\nu_-$ & $d$ each\\
+\bottomrule
+\end{tabular}
+\end{center}
+where
+\begin{align}
+ \nu_++\nu_-&=\frac{1-\lambda}{d^2}
+ [Pu+R(1-u)],\nonumber\\
+ \nu_+\nu_-&=\frac{u(1-u)}{d^2}
+ \left[\frac{(1-\lambda)^2}{d^2}PR-\widetilde B\right].
+ \label{eq:general-roots}
+\end{align}
+The last product is nonpositive.  Summing all eigenvalue magnitudes gives
+\begin{equation}
+ d_{d,\phi}(\lambda)
+ =\max_{0\leq u\leq1}\left\{
+ \frac{1-\lambda}{d}[Pu+R(1-u)]
+ +\sqrt{\frac{(1-\lambda)^2}{d^2}[Pu-R(1-u)]^2
+              +4u(1-u)\widetilde B}
+ \right\}.
+ \label{eq:general-u}
+\end{equation}
+
+With $t=2u-1$, elementary algebra turns Eq.~\eqref{eq:general-u} into
+\begin{equation}
+ \max_{-1\leq t\leq1}\frac1d\left[
+ A(H_0+H_1t)
+ +\sqrt{A^2(H_0+H_1t)^2+4B(1-t^2)}
+ \right].
+ \label{eq:general-t}
+\end{equation}
+If the maximum is interior, its location is
+$t_*=AH_1D/(4B)$ and its value is $D/d$.  The condition $t_*\leq1$ gives the
+first branch of Eq.~\eqref{eq:fixed-norm}; otherwise the maximum is at $t=1$
+and gives its second branch.  The maximizing $\rho$, together with any
+purification, realizes the matching lower-bound witness; the symmetrized SDP
+calculation supplies the upper bound.
+\end{proof}
+
+\subsection{Optimization and the dimension-dependent threshold}
+
+\begin{theorem}[Partial-SWAP signalling in arbitrary dimension]
+\label{thm:partial-swap}
+For every $d\geq2$,
+\begin{equation}
+ \delta_A(U_\phi)
+ =\min_{-1/(d^2-1)\leq\lambda\leq1}d_{d,\phi}(\lambda),
+ \label{eq:scalar-min}
+\end{equation}
+with $d_{d,\phi}$ given explicitly by Eq.~\eqref{eq:fixed-norm}.  Moreover,
+\begin{equation}
+ 0\leq\sin\phi\leq\frac{d^2-3}{d^2-1}
+ \quad\Longrightarrow\quad
+ \lambda_*=1,\qquad
+ \delta_A(U_\phi)=2\sin\phi.
+ \label{eq:weak-branch}
+\end{equation}
+For stronger non-SWAP coupling, a minimizer lies in $0<\lambda_*<1$.
+At $\phi=\pi/2$,
+\begin{equation}
+ \lambda_*=0,\qquad
+ \delta_A(S)=2\left(1-\frac1{d^2}\right).
+ \label{eq:swap-d}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Equation~\eqref{eq:scalar-min} follows from covariance and
+Lemma~\ref{lem:fixed}.  The function $d_{d,\phi}(\lambda)$ is convex because it
+is the diamond norm of a map affine in $\lambda$.  At $\lambda=1$,
+\[
+ d_{d,\phi}(1)=2s,\qquad
+ \left.\frac{d}{d\lambda}d_{d,\phi}(\lambda)\right|_{1^-}
+ =s-\frac{d^2-3}{d^2-1}.
+\]
+Convexity proves Eq.~\eqref{eq:weak-branch}.  The matching invariant density
+has equal total symmetric and antisymmetric weights,
+\[
+ \rho=\frac{dI-S}{d(d^2-1)}.
+\]
+
+At $\lambda=0$ and $c>0$, the derivative is
+$-2(d^2-1)c^2/d^2<0$.  Convexity excludes negative $\lambda$ from the outer
+optimum, while the positive derivative at $\lambda=1$ in the strong regime
+places a minimizer in $(0,1)$.  At SWAP the minimizer is $\lambda=0$;
+Eq.~\eqref{eq:general-t} is maximized at $t=1/d$, corresponding to
+$\rho=I/d^2$, and yields Eq.~\eqref{eq:swap-d}, in agreement with
+Ref.~\cite{barsse2025}.
+\end{proof}
+
+\begin{table}[t]
+\centering
+\caption{Dimension dependence of the partial-SWAP weak threshold and the known
+full-SWAP endpoint.}
+\label{tab:values}
+\begin{tabular}{@{}lll@{}}
+\toprule
+$d$ & weak threshold for $\sin\phi$ & $\delta_A(S)$\\
+\midrule
+$2$ & $1/3$ & $3/2$\\
+$3$ & $3/4$ & $16/9$\\
+$4$ & $13/15$ & $15/8$\\
+$d$ & $(d^2-3)/(d^2-1)$ & $2(1-1/d^2)$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{The XY/iSWAP line}
+
+Consider
+\begin{equation}
+ U_\theta=e^{-i\theta(XX+YY)},\qquad 0\leq\theta\leq\frac{\pi}{4},
+ \qquad C=\cos2\theta,\quad S=\sin2\theta.
+ \label{eq:xy-unitary}
+\end{equation}
+The zero- and two-excitation states are fixed, while on
+$\operatorname{span}\{|01\rangle,|10\rangle\}$ the unitary is
+$C I-iS X$.  Equivalently,
+\[
+ U_\theta=\cos^2\theta\,II-\frac{i}{2}\sin2\theta(XX+YY)
+           +\sin^2\theta\,ZZ.
+\]
+
+\subsection{Axial covariance and the fixed-channel norm}
+
+Joint Pauli covariance first restricts an optimal effective channel to a Pauli
+channel.  The additional axial symmetry generated by $ZI+IZ$ makes its $X$
+and $Y$ weights equal.  We therefore write
+\begin{equation}
+ \cE_{u,w}:\quad (r_x,r_y,r_z)\longmapsto(ur_x,ur_y,wr_z),
+ \qquad -1\leq w\leq1,\quad |u|\leq\frac{1+w}{2}.
+ \label{eq:xy-channel}
+\end{equation}
+The corresponding Pauli probabilities are
+\[
+ q_I=\frac{1+2u+w}{4},\qquad q_X=q_Y=\frac{1-w}{4},\qquad
+ q_Z=\frac{1+w-2u}{4}.
+\]
+
+\begin{lemma}[XY fixed-channel norm]
+\label{lem:xy-fixed}
+For fixed $(u,w)$ in Eq.~\eqref{eq:xy-channel}, put
+$B=\frac12-A$ and
+\[
+ \alpha=\frac{A(1-w)}2,\quad \gamma^2=\frac{AB}{2},\quad
+ g=C-u,\quad h=S,\quad
+ \beta=\frac{B}{2}\left[w-(C^2-S^2)+2iSC\right].
+\]
+Define
+\begin{equation}
+ M_3(A)=
+ \begin{pmatrix}
+ \alpha&\gamma(g+ih)&\gamma(-g+ih)\\
+ \gamma(g-ih)&0&\beta\\
+ \gamma(-g-ih)&\overline\beta&0
+ \end{pmatrix}.
+ \label{eq:xy-m3}
+\end{equation}
+Then
+\begin{equation}
+ \diamondnorm{\cN_{U_\theta}-\cE_{u,w}\cT}
+ =\max_{0\leq A\leq1/2}
+ 2\left[\alpha+\tracenorm{M_3(A)}\right].
+ \label{eq:xy-fixed-norm}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Average the complete primal diamond-SDP tuple over joint axial rotations and
+$X\otimes X$.  The residual odd-sector coherence changes sign under the
+real-linear involution
+\[
+ X\longmapsto(Z\otimes I)X^*(Z\otimes I),
+ \]
+which is a covariance because
+$U_\theta(Z\otimes I)=(Z\otimes I)U_\theta^*$.  Averaging this involution leaves
+an optimal density of the form
+\[
+ \rho=A(|00\rangle\langle00|+|11\rangle\langle11|)
+ +B(|01\rangle\langle01|+|10\rangle\langle10|).
+\]
+Inserting $\rho$ in Eq.~\eqref{eq:watrous}, the scaled Choi operator splits
+into two unitarily equivalent blocks.  Each has one scalar eigenvalue
+$-\alpha$ and the three eigenvalues of Eq.~\eqref{eq:xy-m3}, which proves
+Eq.~\eqref{eq:xy-fixed-norm}.  For reference, the characteristic polynomial
+$x^3+p_2x^2+p_1x+p_0$ of $M_3$ has
+\begin{align*}
+ p_2&=-\alpha,\\
+ p_1&=-\left[2\gamma^2(g^2+h^2)+|\beta|^2\right],\\
+ p_0&=\alpha|\beta|^2
+ +2\gamma^2(g^2-h^2)\Re\beta
+ -4\gamma^2gh\Im\beta.
+\end{align*}
+\end{proof}
+
+Lemma~\ref{lem:xy-fixed} is an exact finite-dimensional answer along the whole
+XY line:
+\begin{equation}
+ \delta_A(U_\theta)=
+ \min_{\substack{-1\leq w\leq1\\|u|\leq(1+w)/2}}
+ \max_{0\leq A\leq1/2}
+ 2\left[\alpha+\tracenorm{M_3(A)}\right].
+ \label{eq:xy-minmax}
+\end{equation}
+Whenever $M_3$ has one nonnegative and two nonpositive eigenvalues,
+$\Tr M_3=\alpha$ gives
+$2[\alpha+\|M_3\|_1]=4\lambda_{\max}(M_3)$.
+Two coupling regimes simplify further.
+
+\subsection{Closed weak and iSWAP branches}
+
+Let $\theta_1=0.258270520262\ldots$ be the unique root in
+$(0,\pi/4)$ of
+\begin{equation}
+ 2SC=3C^3+C^2-C-1,
+ \label{eq:xy-first-threshold}
+\end{equation}
+and let $\theta_2=0.646615513406\ldots$ solve
+\begin{equation}
+ 1+C^2=2C(1+S).
+ \label{eq:xy-second-threshold}
+\end{equation}
+Equivalently, $\tan\theta_2$ is the positive root of $t^3+t^2-1=0$.
+
+\begin{theorem}[Closed XY signalling branches]
+\label{thm:xy}
+For $0\leq\theta\leq\theta_1$,
+\begin{equation}
+ \delta_A(U_\theta)=\sin4\theta,
+ \qquad (q_I,q_X,q_Y,q_Z)
+ =\left(C^2,\frac{S^2}{2},\frac{S^2}{2},0\right).
+ \label{eq:xy-weak}
+\end{equation}
+For $\theta_2\leq\theta\leq\pi/4$,
+\begin{equation}
+ \delta_A(U_\theta)=S+\frac{S^2}{2},
+ \label{eq:xy-strong}
+\end{equation}
+with
+\begin{equation}
+ (q_I,q_X,q_Y,q_Z)=\frac14
+ \left(1+C^2+2C(1+S),\,S^2,\,S^2,\,
+       1+C^2-2C(1+S)\right).
+ \label{eq:xy-strong-channel}
+\end{equation}
+In particular, $\delta_A(\mathrm{iSWAP})=3/2$.
+\end{theorem}
+
+\begin{proof}
+For every effective channel, the choice $A=0$ in
+Eq.~\eqref{eq:xy-fixed-norm} gives
+\[
+ \sqrt{[w-(C^2-S^2)]^2+4S^2C^2}\geq2SC.
+\]
+This is the weak lower bound.  For the channel in Eq.~\eqref{eq:xy-weak}, let
+$H_1=(SC/2)I-M_3(A)$.  Its leading principal minor is
+$S(C-2AS)/2$, and its $(2,3)$ principal minor is
+$AC^2(A-1)(C-1)(C+1)$.  The remaining order-two minor is nonnegative after
+completing its quadratic square.  Finally,
+\[
+ \det H_1=\frac{AC(C-1)}4K(A),
+\]
+where $K$ is convex and
+\[
+ K(0)=S[2SC-(3C^3+C^2-C-1)],\qquad
+ K(1/2)=-C(C+1)S(C-S).
+\]
+Both endpoint values are nonpositive precisely through the weak interval;
+convexity gives $K(A)\leq0$.  Moreover,
+\[
+ \det M_3=-\frac{AC^2(2A-1)^2(C-1)^3(C+1)}4\geq0,
+\]
+while the sum of its order-two principal minors is nonpositive.  Thus $M_3$
+has one nonnegative and two nonpositive eigenvalues.  The principal minors
+above give $H_1\geq0$, hence $\lambda_{\max}(M_3)\leq SC/2$; together with the
+inertia identity following Eq.~\eqref{eq:xy-minmax}, this makes
+Eq.~\eqref{eq:xy-fixed-norm} at most $2SC$.  This proves
+Eq.~\eqref{eq:xy-weak} and identifies the first threshold.
+
+For the strong branch, Eq.~\eqref{eq:xy-strong-channel} has
+$u=C(1+S)$ and $w=C^2$.  It is CPTP exactly when
+Eq.~\eqref{eq:xy-second-threshold} holds with the strong-side inequality.
+At $A=1/4$, the largest eigenvalue of $M_3$ is
+\[
+ L=\frac{S(2+S)}8,
+\]
+with eigenvector proportional to $(i\sqrt2,1,1)$.  The other two eigenvalues
+have sum $-S/4$ and product
+$S^2(7S^2+2S-8)/64$, so they are negative throughout this regime.
+The derivatives of $L$ in both $u$ and $w$ vanish.  Convexity of the trace
+norm in the channel parameters therefore proves that the fixed
+$A=1/4$ witness has global minimum $4L=S+S^2/2$.
+
+It remains to prove the matching upper bound.  Put $H_3=LI-M_3(A)$.  Direct
+factorization gives
+\[
+ \det H_3=-\frac{S^3(4A-1)^2(S+2)}{512}
+ \left[A(28S^2+8S-32)+12-13S^2-4S\right].
+\]
+The bracket is negative at both endpoints of $A\in[0,1/2]$.  The two
+nontrivial order-two principal minors are $S^2G_1/64$ and $S^2G_2/64$, where,
+with $t=2A$,
+\begin{align*}
+ G_1={}&(16-8S^2)t^2+(6S^2-4S-16)t+(S+2)^2,\\
+ G_2={}&(12S^2-16)t^2+(32-24S^2)t+13S^2+4S-12.
+\end{align*}
+$G_1$ has positive completed-square minimum, while $G_2$ is concave with
+nonnegative endpoint values $13S^2+4S-12$ and $(S+2)^2$.  Together with
+$(H_3)_{11}=S(S+2-4AS)/8$, all principal minors are nonnegative, so
+$H_3\geq0$.  In addition,
+\[
+ \det M_3=
+ \frac{AS^3(2A-1)^2(S+2)(7S^2+2S-8)}{32}\geq0,
+\]
+and the sum of its order-two principal minors is nonpositive.  Thus again
+$M_3$ has one nonnegative and two nonpositive eigenvalues, and
+Eq.~\eqref{eq:xy-fixed-norm} is at most $4L$.  This proves
+Eq.~\eqref{eq:xy-strong}.  At $S=1$, the four probabilities are $1/4$ and the
+value is $3/2$.
+\end{proof}
+
+In the intervening interval $\theta_1<\theta<\theta_2$,
+Eq.~\eqref{eq:xy-minmax} remains the rigorous characterization.  Numerical
+SDPs place the minimizer on the CPTP facet $q_Z=0$ and the maximizing witness
+in the interior.  Conditional on that active facet, eliminating the channel
+and witness parameters gives a compact algebraic result.  With
+$t=\tan\theta$ and $\Delta=\delta_A(U_\theta)$, define
+\begin{align}
+ Q_+(\Delta,t)={}&
+ (t^6+t^5+3t^4+2t^3+3t^2+t+1)\Delta^4\nonumber\\
+ &+(2t^7-46t^6-122t^5-170t^4-138t^3-58t^2-14t+2)\Delta^3\nonumber\\
+ &+(-84t^7+24t^6+72t^5+96t^4-68t^3-56t^2-32t)\Delta^2\nonumber\\
+ &+(96t^7+64t^6+160t^5+384t^4+320t^3+128t^2)\Delta\nonumber\\
+ &+64t^5(2t^2+2t+1).
+ \label{eq:xy-middle-quartic}
+\end{align}
+Exact elimination gives $Q_+(\Delta,t)=0$.  Its degree-eight counterpart over
+$\mathbb{Q}(C)$ is the field norm proportional to
+$Q_+(\Delta,t)Q_+(\Delta,-t)$.  Sturm counts show that $Q_+$ has exactly one
+root $\Delta\in(1/2,2)$ throughout the intermediate interval, with no root
+collision or endpoint crossing, and it joins both closed branches exactly.
+This quartic is rigorous conditional information, not an unconditional formula:
+an attempted KKT proof of the $q_Z=0$ facet still contains a floating-point
+physical-sheet selection.  We therefore do not claim an analytic active-facet
+proof for the middle branch.  The full curve satisfies
+$\delta_A(\theta)=\delta_A(\pi/2-\theta)$ and returns to zero at
+$\theta=\pi/2$, where $U_{\pi/2}=Z\otimes Z$.
+
+\section{Discussion}
+
+The three families exhibit different mechanisms.  In the Ising family, one
+dephasing channel is optimal for every coupling, and two product inputs already
+witness the exact defect.  Along the partial-SWAP family, the optimal effective
+channel itself changes: it remains the identity until
+$\sin\phi=(d^2-3)/(d^2-1)$, then moves into the depolarizing interval and
+reaches complete depolarization at SWAP.  The optimal diamond witness likewise
+generally uses a reference system, as encoded by a purification of the
+symmetric/antisymmetric density in
+Lemma~\ref{lem:fixed}.
+
+The XY line has less symmetry and a genuine active-set phase diagram.  Its weak
+branch is controlled by the one-excitation witness, its central iSWAP branch by
+the maximally mixed witness, and the intervening interval moves through an
+algebraic saddle.  The iSWAP value $3/2$ equals the qubit SWAP value despite the
+gates belonging to different local-equivalence classes.
+
+The threshold is operational rather than spectral: it is where the outer
+channel optimization first benefits from adding depolarization.  It is not
+visible from operator entanglement alone.  This supplies a concrete example in
+which a coarse-grained autonomy question differs from a Hilbert--Schmidt
+interaction diagnostic.
+
+The result is limited in three important ways.  First, Eq.~\eqref{eq:defect}
+is a pre-existing signalling measure, not a newly defined quantity.  Second,
+the exact CNOT and SWAP endpoints are prior results
+\cite{barsse2025}; the contribution here is the continuous-family evaluation.
+Third, closed formulas for both the intermediate XY saddle and a generic
+two-qubit Cartan interaction
+$e^{-i(\alpha XX+\beta YY+\gamma ZZ)}$ remain open.  Joint-Pauli symmetry
+reduces the latter problem to optimization over the Pauli-channel tetrahedron, but
+the three leakage sectors interfere in trace norm and the partial-SWAP
+$U(2)$ symmetry is absent.
+
+\section{Reproducibility}
+
+The accompanying repository implements finite-dimensional certificates over
+the Gaussian rationals $\mathbb{Q}(i)$.  It verifies the Ising residual
+factorization, the physical product-state witness, the equal-Cartan/partial-SWAP
+identity, exact qubit, qutrit, and dimension-four weak-branch values, the
+negative depolarizing boundary, the SWAP endpoint, and rational points on both
+closed XY branches including iSWAP.  The focused suite is
+run from the repository root with
+\begin{verbatim}
+python3 -m unittest discover -s tests -p 'test_aqc_*.py' -v
+\end{verbatim}
+The code is a certificate and regression harness; the analytic proofs above do
+not depend on floating-point optimization.  The exact harness covers an
+interior point of the weak branch and the SWAP boundary of the strong branch;
+the generic interior strong-branch result is certified analytically by
+Eqs.~\eqref{eq:general-roots}--\eqref{eq:scalar-min}, not by encoding its
+generally algebraic minimizer in the rational backend.
+
+\section{Conclusion}
+
+Directional signalling can be evaluated sharply beyond isolated gates.
+For two-qubit Ising interactions it is $|\sin2\theta|$.  In every finite
+dimension, partial SWAP reduces to an explicit scalar convex minimization with
+weak branch $2\sin\phi$, transition
+$(d^2-3)/(d^2-1)$, and known SWAP endpoint $2(1-1/d^2)$.  The calculation
+of the XY line adds exact weak and iSWAP-adjacent branches, including the new
+iSWAP endpoint $3/2$, while exposing an intermediate algebraic saddle rather
+than hiding it behind a numerical fit.  These results provide controlled
+settings in which an optimal
+autonomous effective channel changes nonperturbatively with interaction
+strength.  The axially symmetric XXZ surface is the next tractable step toward
+the full Cartan chamber.
+
+\begin{thebibliography}{99}
+
+\bibitem{barsse2024}
+K.~Barsse, P.~Perinotti, A.~Tosini, and L.~Vaglini,
+``Causal influence versus signalling for interacting quantum channels,''
+\emph{Phys. Rev. Research} \textbf{6}, 043305 (2024),
+\href{https://arxiv.org/abs/2309.07771}{arXiv:2309.07771}.
+
+\bibitem{barsse2025}
+K.~Barsse, P.~Perinotti, A.~Tosini, and L.~Vaglini,
+``Disentangling signalling and causal influence'' (2025),
+\href{https://arxiv.org/abs/2505.14120}{arXiv:2505.14120}.
+
+\bibitem{beckman2001}
+D.~Beckman, D.~Gottesman, M.~A. Nielsen, and J.~Preskill,
+``Causal and localizable quantum operations,''
+\emph{Phys. Rev. A} \textbf{64}, 052309 (2001),
+\href{https://arxiv.org/abs/quant-ph/0102043}{arXiv:quant-ph/0102043}.
+
+\bibitem{eggeling2002}
+T.~Eggeling, D.~Schlingemann, and R.~F. Werner,
+``Semicausal operations are semilocalizable,''
+\emph{Europhys. Lett.} \textbf{57}, 782 (2002),
+\href{https://arxiv.org/abs/quant-ph/0104027}{arXiv:quant-ph/0104027}.
+
+\bibitem{ksw2008}
+D.~Kretschmann, D.~Schlingemann, and R.~F. Werner,
+``A continuity theorem for Stinespring's dilation,''
+\emph{J. Funct. Anal.} \textbf{255}, 1889 (2008),
+\href{https://arxiv.org/abs/0710.2495}{arXiv:0710.2495}.
+
+\bibitem{watrous2009}
+J.~Watrous, ``Semidefinite programs for completely bounded norms,''
+\emph{Theory Comput.} \textbf{5}, 217 (2009).
+
+\bibitem{watrous2018}
+J.~Watrous, \emph{The Theory of Quantum Information}
+(Cambridge University Press, Cambridge, 2018).
+
+\bibitem{zanardi2001}
+P.~Zanardi, ``Entanglement of quantum evolutions,''
+\emph{Phys. Rev. A} \textbf{63}, 040304(R) (2001),
+\href{https://arxiv.org/abs/quant-ph/0010074}{arXiv:quant-ph/0010074}.
+
+\bibitem{ziman2002}
+M.~Ziman, P.~Stelmachovic, V.~Buzek, M.~Hillery, V.~Scarani, and N.~Gisin,
+``Quantum homogenization,''
+\emph{Phys. Rev. A} \textbf{65}, 042105 (2002),
+\href{https://arxiv.org/abs/quant-ph/0110164}{arXiv:quant-ph/0110164}.
+
+\bibitem{scarani2002}
+V.~Scarani, M.~Ziman, P.~Stelmachovic, N.~Gisin, and V.~Buzek,
+``Thermalizing quantum machines: Dissipation and entanglement,''
+\emph{Phys. Rev. Lett.} \textbf{88}, 097905 (2002),
+\href{https://arxiv.org/abs/quant-ph/0110088}{arXiv:quant-ph/0110088}.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the repository and accompanying paper."
+title: "Exact directional signalling for continuous unitary families"
+type: software
+authors:
+  - family-names: Astbury
+    given-names: Richard
+repository-code: "https://github.com/richorama/quantum-directional-signalling"
+license: CC-BY-4.0
+version: 0.1.0
+date-released: 2026-07-28
