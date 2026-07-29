@@ -26,6 +26,11 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Physics",
 ]
 
+# The certificate package and its test suite are dependency free.  Only the
+# optional symbolic derivation in tools/derive_xy_middle.py needs SymPy.
+[project.optional-dependencies]
+proof = ["sympy==1.13.3"]
+
 [project.urls]
 Repository = "https://github.com/richorama/quantum-directional-signalling"
 

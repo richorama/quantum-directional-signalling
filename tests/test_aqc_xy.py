@@ -9,6 +9,7 @@ from quantum_coarse_graining.xy import (
     xy_middle_quartic_coefficients,
     xy_middle_discriminant,
     xy_middle_join_certificate,
+    xy_middle_noncollision_certificate,
     xy_middle_root_window_certificate,
     xy_second_threshold_tangent_polynomial,
     xy_pauli_channel,
@@ -105,12 +106,16 @@ class XYSignallingTests(unittest.TestCase):
             Fraction(-5, 8),
         )
         self.assertGreater(xy_middle_discriminant(Fraction(1, 2)), 0)
-        self.assertTrue(xy_middle_root_window_certificate(Fraction(1, 2)))
+        self.assertTrue(xy_middle_noncollision_certificate(Fraction(1, 2)))
+        self.assertEqual(
+            xy_middle_root_window_certificate(Fraction(1, 2)),
+            xy_middle_noncollision_certificate(Fraction(1, 2)),
+        )
         self.assertTrue(xy_middle_join_certificate(Fraction(1, 2)))
 
-    def test_middle_root_window_guard(self):
+    def test_middle_noncollision_window_guard(self):
         with self.assertRaises(ValueError):
-            xy_middle_root_window_certificate(Fraction(1, 5))
+            xy_middle_noncollision_certificate(Fraction(1, 5))
 
 
 if __name__ == "__main__":

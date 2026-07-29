@@ -159,7 +159,7 @@ def xy_middle_discriminant(tangent: Fraction) -> Fraction:
     )
 
 
-def xy_middle_root_window_certificate(tangent: Fraction) -> bool:
+def xy_middle_noncollision_certificate(tangent: Fraction) -> bool:
     """Check the exact endpoint signs and noncollision factor."""
     t = Fraction(tangent)
     if not Fraction(1, 4) <= t <= Fraction(19, 25):
@@ -169,6 +169,11 @@ def xy_middle_root_window_certificate(tangent: Fraction) -> bool:
         and xy_middle_quartic(Fraction(2), t) < 0
         and xy_middle_discriminant(t) > 0
     )
+
+
+def xy_middle_root_window_certificate(tangent: Fraction) -> bool:
+    """Compatibility alias for :func:`xy_middle_noncollision_certificate`."""
+    return xy_middle_noncollision_certificate(tangent)
 
 
 def xy_middle_join_certificate(tangent: Fraction) -> bool:
@@ -387,7 +392,7 @@ def xy_boundary_certificate() -> bool:
         == Fraction(97, 64)
         and xy_second_threshold_tangent_polynomial(Fraction(1, 2))
         == Fraction(-5, 8)
-        and xy_middle_root_window_certificate(Fraction(1, 2))
+        and xy_middle_noncollision_certificate(Fraction(1, 2))
         and xy_middle_join_certificate(Fraction(1, 2))
         and xy_weak_defect(weak_cosine, weak_sine) == Fraction(120, 169)
         and xy_weak_probabilities(weak_cosine, weak_sine)

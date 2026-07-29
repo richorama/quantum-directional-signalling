@@ -17,6 +17,25 @@ This asks how well the reduced output on \(A\) can be predicted from the
 reduced input on \(A\) alone, even when the input is correlated with hidden
 system \(B\) and an arbitrary reference.
 
+## Plain-language picture
+
+Imagine two quantum objects, A and B, interact. You then discard B and try to
+describe A using only what was initially known about A. That description can
+fail because B carried hidden information that affected A.
+
+\(\delta_A(U)\) is the smallest unavoidable worst-case error, even after
+choosing the best possible A-only rule. Zero means A has autonomous dynamics;
+a larger value means B can signal more strongly into A. The diamond norm makes
+this an adversarial test that also permits correlations with an external
+reference.
+
+The main qualitative result is that the best simplified rule can change as
+the interaction gets stronger. For partial SWAP it eventually becomes better
+to add deliberate noise than to pretend A evolved unchanged. For XY the exact
+curve has three regimes:
+
+![Exact XY directional-signalling curve](paper/xy_curve.svg)
+
 ## Results
 
 - **Two-qubit Ising:** for \(U_\theta=e^{-i\theta Z\otimes Z}\),
@@ -45,6 +64,8 @@ matching witnesses.
 - `tests/` — focused theorem and regression certificates.
 - `paper/aqc_signalling.tex` — manuscript source.
 - `paper/aqc_signalling.pdf` — compiled manuscript.
+- `tools/derive_xy_middle.py` — optional exact symbolic reconstruction.
+- `AUDIT.md` — independent-review checklist.
 - `RESEARCH_NOTES.md` — claims ledger, proof boundaries, and open questions.
 
 ## Reproduce
@@ -55,12 +76,25 @@ The exact certificate suite has no third-party Python dependencies:
 python3 -m unittest discover -s tests -p 'test_aqc_*.py' -v
 ```
 
+Reconstruct the load-bearing XY eliminations with the optional proof tools:
+
+```bash
+python3 -m pip install -e '.[proof]'
+python3 tools/derive_xy_middle.py
+```
+
 Build the manuscript with:
 
 ```bash
 cd paper
 pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex
 pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex
+```
+
+Regenerate the XY figure with:
+
+```bash
+python3 paper/generate_xy_plot.py
 ```
 
 ## Scope

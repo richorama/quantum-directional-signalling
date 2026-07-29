@@ -10,6 +10,7 @@
 \usepackage{amsthm}
 \usepackage{mathtools}
 \usepackage{booktabs}
+\usepackage{pgfplots}
 \usepackage{xcolor}
 \usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,
             urlcolor=blue!55!black,breaklinks=true]{hyperref}
@@ -32,6 +33,7 @@
 \newcommand{\diamondnorm}[1]{\left\lVert #1\right\rVert_{\diamond}}
 \newcommand{\tracenorm}[1]{\left\lVert #1\right\rVert_{1}}
 \newcommand{\SWAP}{\mathrm{SWAP}}
+\pgfplotsset{compat=1.16}
 
 \hypersetup{
   pdftitle={Exact directional signalling for Ising, partial-SWAP, and XY unitary families},
@@ -126,6 +128,47 @@ distances and the linear entropy of a vectorized unitary are useful algebraic
 diagnostics~\cite{zanardi2001}, but they do not directly give operational
 channel distinguishability.  Every result below is stated in diamond norm and
 is accompanied by both an upper bound and a matching witness.
+
+\subsection*{Operational picture}
+
+Informally, $A$ is a visible system and $B$ is hidden.  They interact, $B$ is
+discarded, and one tries to replace the joint evolution by the best channel
+acting on $A$ alone.  The number $\delta_A(U)$ is the unavoidable worst-case
+error of that replacement, including inputs correlated with $B$ and with an
+external reference.  A zero value means that $A$ admits autonomous reduced
+dynamics.  A nonzero value quantifies how strongly information hidden in $B$
+can affect the visible output.
+
+Figure~\ref{fig:xy-curve} shows the most intricate example below.  The formulas
+change because both the optimal effective channel and the input witnessing its
+error change with interaction strength.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=0.82\textwidth,
+ height=0.42\textwidth,
+ xlabel={interaction angle $\theta$},
+ ylabel={unavoidable error $\delta_A$},
+ xmin=0, xmax=0.7853982,
+ ymin=0, ymax=1.6,
+ xtick={0,0.25827052,0.64661551,0.78539816},
+ xticklabels={$0$,$\theta_1$,$\theta_2$,$\pi/4$},
+ grid=major,
+]
+\addplot[blue!65!black,very thick] table[x=theta,y=defect] {xy_curve.dat};
+\draw[dashed] (axis cs:0.25827052,0) -- (axis cs:0.25827052,1.6);
+\draw[dashed] (axis cs:0.64661551,0) -- (axis cs:0.64661551,1.6);
+\node[anchor=west] at (axis cs:0.04,0.22) {weak};
+\node[anchor=west] at (axis cs:0.37,1.16) {quartic};
+\node[anchor=east] at (axis cs:0.76,1.43) {iSWAP};
+\end{axis}
+\end{tikzpicture}
+\caption{The exact XY directional-signalling curve.  The middle segment is the
+unique physical root of Eq.~\eqref{eq:xy-middle-quartic}.}
+\label{fig:xy-curve}
+\end{figure}
 
 \section{Preliminaries}
 
@@ -733,11 +776,9 @@ Here $\Psi>0$ because its discriminant is
 $C(C-1)(C^2+3C+4)<0$.  Eliminating $A,u,\lambda$ from
 $P=P_A=P_u+2P_w=G=0$, after saturating the interior factors, gives
 \[
- C^6(C-1)^{14}(C+1)^3(C^2+3)
- (5C^3+C^2+3C-1)
- (20C^4+32C^3+29C^2+16C+3)=0.
+ 5C^3+C^2+3C-1=0.
 \]
-No factor vanishes in the open intermediate interval.  At $\theta_1$ the
+This is exactly the second-threshold equation.  At $\theta_1$ the
 limiting weak saddle has $A=0$, $u=C^2$, $\lambda=SC/2$, and
 \[
  G=\frac{C(1-C)}2[(1+C)+SC]>0.
@@ -864,6 +905,16 @@ run from the repository root with
 \begin{verbatim}
 python3 -m unittest discover -s tests -p 'test_aqc_*.py' -v
 \end{verbatim}
+The larger symbolic identities in Theorem~\ref{thm:xy-middle} can be
+regenerated independently with the optional proof dependencies:
+\begin{verbatim}
+python3 -m pip install -e '.[proof]'
+python3 tools/derive_xy_middle.py
+\end{verbatim}
+The plotted data are generated without third-party Python dependencies:
+\begin{verbatim}
+python3 paper/generate_xy_plot.py
+\end{verbatim}
 The code is a certificate and regression harness; the analytic proofs above do
 not depend on floating-point optimization.  The exact harness covers an
 interior point of the weak branch and the SWAP boundary of the strong branch;
@@ -885,6 +936,98 @@ settings in which an optimal
 autonomous effective channel changes nonperturbatively with interaction
 strength.  The axially symmetric XXZ surface is the next tractable step toward
 the full Cartan chamber.
+
+\appendix
+\section{Audit details for the intermediate XY branch}
+\label{app:xy-audit}
+
+This appendix records the boundary and saturation details used in
+Theorem~\ref{thm:xy-middle}.  They are included to make the exact eliminations
+auditable without reconstructing the branch selection from numerical output.
+
+\subsection{Boundary exclusion and uniqueness}
+
+On the facet $w=2u-1$, Eq.~\eqref{eq:xy-middle-characteristic} satisfies
+\[
+ P_A\big|_{A=1/2,\,\lambda=(1-u)/2}
+ =\frac{u(1-u)(1-C)}2>0.
+\]
+Since $P_\lambda>0$, the largest eigenvalue decreases as $A$ approaches
+$1/2$; that endpoint cannot maximize the witness objective.  At $A=0$, the
+objective is
+\[
+ 2\sqrt{(u-C^2)^2+C^2S^2}.
+\]
+Its only stationary point is $u=C^2$.  The derivative into $A>0$ there has
+the sign of
+\[
+ C(1-C)S[2SC-(3C^3+C^2-C-1)],
+\]
+which is positive exactly after the first threshold.  Thus the middle saddle
+has $0<A<1/2$.  Direct endpoint evaluation gives
+$f'(0^+)=-2$ and $f'(1^-)=2S$, so also $0<u<1$.
+
+For fixed $u$, concavity in $A$ makes the maximizer set an interval.  Any
+nontrivial interval would make the cubic
+$P(\lambda;A,u)$ vanish identically in $A$, contradicting the coefficient
+$-\Theta$ of $A^3$.  For fixed $C$, convexity in $u$ makes the minimizer set
+an interval.  A flat portion on the $A=0$ boundary is excluded by strict
+convexity of the displayed square root.  In the interior it would force the
+$A$-discriminant polynomial $R$ in the main proof to vanish identically in
+$u$, including its leading coefficient $(1-C)^2-8\lambda$.  This contradicts
+$4\lambda\geq2SC>1/2$.  Hence both optimizers are unique, and Berge's theorem
+gives their continuity in $C$.
+
+\subsection{Multiplier elimination and saturation ledger}
+
+The zero-multiplier calculation starts from the unrestricted characteristic
+polynomial and the equations
+\[
+ P=0,\qquad P_A=0,\qquad P_u+2P_w=0,\qquad G=0.
+\]
+The physical interior permits saturation by
+\[
+ A,\ B,\ u,\ 1-u,\ C,\ 1-C^2,\ \lambda,\ P_\lambda,\ \Psi.
+\]
+Every factor is nonzero: the boundary factors were excluded above;
+$0<C<1$ and $\lambda>0$ hold in the middle interval;
+$P_\lambda>0$ follows from the simple positive eigenvalue; and
+$\Psi>0$ follows from its negative discriminant.  The substitution
+$B=(u-C)\lambda/\Psi$ therefore loses no physical solution.  The remaining
+generic component $u=-2\lambda$ is incompatible with $u,\lambda>0$.
+After these exclusions, the saturated elimination ideal in
+$\mathbb{Q}[C]$ is generated by $5C^3+C^2+3C-1$.  It vanishes only at
+$\theta_2$, establishing the nonvanishing multiplier used in the KKT
+argument.  The optional symbolic script also prints the unsaturated resultant
+factors and the justification for excluding each one.
+
+\subsection{Physical sheet and root isolation}
+
+With $\sigma=t^2/(1+t^2)$ and $b=1-a$, the conjugate sheet obeys the exact
+rearrangement
+\[
+ -\frac{W_+(a,\Delta,-t)}{(1+t^2)^2}
+ =(1+b)\Delta^2+4b\Delta\kappa-16(1-b)b^2\sigma^2,
+\]
+where
+\[
+ \kappa=SC-2a\sigma(1-S)\geq S+C-1>0.
+\]
+Using $a(1-a)\leq1/4$, $\Delta\geq1/2$, and
+$t\in[1/4,19/25]$ gives the rational lower bound
+$171381/972196$.  Thus the conjugate sheet cannot contain the physical
+saddle.  The resultant in the main proof then forces $Q_+=0$ because all its
+remaining factors are strictly positive.
+
+The leading coefficient of $Q_+$ is
+\[
+ (1+t^2)^2(t^2+t+1)>0.
+\]
+The endpoint signs and nonzero discriminant displayed in the main proof
+prevent roots from entering, leaving, colliding, or escaping to infinity on
+the enclosing interval.  The exact Sturm variation difference at $t=1/2$ is
+one between $\Delta=1/2$ and $\Delta=2$.  Hence the physical root is unique
+throughout the middle regime.
 
 \begin{thebibliography}{99}
 
