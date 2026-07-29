@@ -26,13 +26,13 @@ system \(B\) and an arbitrary reference.
   \(\sin\phi\le (d^2-3)/(d^2-1)\),
   \(\delta_A(U_\phi)=2\sin\phi\); at SWAP,
   \(\delta_A=2(1-1/d^2)\).
-- **Two-qubit XY/iSWAP:** two closed branches are proved. The weak branch is
+- **Two-qubit XY/iSWAP:** the weak branch is
   \(\delta_A=\sin4\theta\), while near iSWAP it is
   \(\delta_A=\sin2\theta+\tfrac12\sin^2 2\theta\), giving
   \(\delta_A(\mathrm{iSWAP})=3/2\).
 - **Intermediate XY regime:** an exact quartic and unique physical root are
-  derived conditional on the numerically observed \(q_Z=0\) active facet. A
-  global analytic proof of that facet remains open and is not claimed.
+  proved. Convex KKT analysis establishes the \(q_Z=0\) active facet, and an
+  exact resultant plus root isolation selects the physical algebraic sheet.
 
 The signalling measure itself and the exact isolated CNOT and SWAP values are
 prior work by Barsse, Perinotti, Tosini, and Vaglini. The contribution here is

@@ -7,6 +7,9 @@ from quantum_coarse_graining.xy import (
     xy_boundary_certificate,
     xy_first_threshold_tangent_polynomial,
     xy_middle_quartic_coefficients,
+    xy_middle_discriminant,
+    xy_middle_join_certificate,
+    xy_middle_root_window_certificate,
     xy_second_threshold_tangent_polynomial,
     xy_pauli_channel,
     xy_strong_defect,
@@ -82,7 +85,7 @@ class XYSignallingTests(unittest.TestCase):
     def test_combined_boundary_certificate(self):
         self.assertTrue(xy_boundary_certificate())
 
-    def test_conditional_middle_quartic_control(self):
+    def test_middle_quartic_control(self):
         self.assertEqual(
             xy_middle_quartic_coefficients(Fraction(1, 2)),
             (
@@ -101,6 +104,13 @@ class XYSignallingTests(unittest.TestCase):
             xy_second_threshold_tangent_polynomial(Fraction(1, 2)),
             Fraction(-5, 8),
         )
+        self.assertGreater(xy_middle_discriminant(Fraction(1, 2)), 0)
+        self.assertTrue(xy_middle_root_window_certificate(Fraction(1, 2)))
+        self.assertTrue(xy_middle_join_certificate(Fraction(1, 2)))
+
+    def test_middle_root_window_guard(self):
+        with self.assertRaises(ValueError):
+            xy_middle_root_window_certificate(Fraction(1, 5))
 
 
 if __name__ == "__main__":

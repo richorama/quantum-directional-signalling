@@ -435,27 +435,34 @@ threshold is exactly where `K(0)` vanishes and the boundary witness at `A=0`
 ceases to maximize the norm.
 
 **II. Intermediate coupling.**  For
-`theta_1<theta<theta_2`, full SDPs consistently place the optimum on the CPTP
-facet `q_Z=0`, or `u=(1+w)/2`, with an interior witness.  This active-facet
-selection is a numerical conjecture, not yet a theorem.  The rigorous exact
-characterization remains the two-parameter saddle
+`theta_1<theta<theta_2`, the optimum lies on the CPTP facet `q_Z=0`, or
+`u=(1+w)/2`, with an interior witness.  This follows analytically from
+convexity and the KKT multiplier.  On the facet the characteristic polynomial
+of the nontrivial block is
 
 ```text
-delta_A(U_theta)
- = min_{(u,w) CPTP} max_{0<=A<=1/2} 2[alpha+||M3||_1].
+P(lambda;A,u)
+ = lambda^3-A(1-u)lambda^2-(ABm+B^2N)lambda-AB^2 Theta,
 ```
 
-Conditional on the observed `q_Z=0` facet, it reduces to
+where `B=1/2-A`, `m=(u-C)^2+S^2`,
+`N=(u-C^2)^2+C^2S^2`, and
+`Theta=u(1-u)(1-C)^2`.  Its inertia is one positive and two negative
+eigenvalues.  Concavity in the invariant witness and convexity in the channel
+give a unique continuous facet saddle.
 
-```text
-delta_A(U_theta)
- = min_w max_{0<=A<=1/2} 4 lambda_max(M3)
-   subject to u=(1+w)/2.
-```
+Holding `w` fixed before restricting to the facet, the normal derivative is
+`P_u=2AB G`, with
 
-Eliminating `A` and `w` from those stationary equations gives a compact
-conditional algebraic answer.  With `t=tan(theta)` and `d=delta_A(U_theta)`,
-the physical sheet obeys
+`G=(C-u)lambda+B[u^2-C(1+C)u+C]`.
+
+Eliminating a hypothetical zero multiplier from the stationary system leaves,
+inside `0<C<1`, only the factor `5C^3+C^2+3C-1`, which is the second
+threshold.  The limiting weak saddle has `G>0`, so the multiplier is positive
+throughout the open middle interval.  Convex KKT sufficiency proves global
+optimality on the `q_Z=0` facet.
+
+With `t=tan(theta)` and `d=delta_A(U_theta)`, exact elimination gives
 
 ```text
 Q_+(d,t) =
@@ -466,19 +473,20 @@ Q_+(d,t) =
 +64t^5(2t^2+2t+1) = 0.
 ```
 
-The degree-eight elimination over `Q(C)` is the field norm
-`Q_+(d,t)Q_+(d,-t)`.  Exact Sturm counts show that `Q_+` has exactly one root
-`d in (1/2,2)` throughout the intermediate interval, with no collisions or
-bracket crossings.  It joins the weak and strong values exactly: the first
-threshold is the relevant root of
+The sheet selection is exact.  After putting `a=2A`, the stationary
+characteristic polynomial is quadratic in `u`; its discriminant factors as
+`4 W_+(a,d,t) W_+(a,d,-t)`.  A rational lower bound proves
+`W_+(a,d,-t)<0` throughout the physical domain.  Eliminating `a` from the
+remaining sheet and witness stationarity gives `Q_+` times factors that are
+strictly positive for `0<t<1` and `d>0`.  Exact Sturm counts then show that
+`Q_+` has exactly one root `d in (1/2,2)` throughout the intermediate
+interval, with no collisions or bracket crossings.  It joins the weak and
+strong values exactly: the first threshold is the relevant root of
 `t^6-2t^5-3t^4+7t^2+2t-1`, and the second is the root of
 `t^3+t^2-1`.
 
-This quartic is rigorous **conditional on the active facet**.  An attempted
-KKT/elimination proof found exact inertia and all-witness PSD identities, but
-an independent audit found that the load-bearing multiplier sign and physical
-sheet tracking still use floating-point branch selection.  Therefore no
-analytic active-facet proof, and no unconditional middle formula, is claimed.
+The middle quartic is therefore unconditional; neither active-facet selection
+nor physical-sheet tracking uses floating point.
 
 **III. Central iSWAP regime.**  Let `theta_2=0.646615513406...` be the root
 

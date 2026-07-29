@@ -62,10 +62,6 @@ def matrix(rows: Sequence[Sequence[int | Fraction | Gaussian]]) -> Matrix:
     )
 
 
-def zeros(rows: int, columns: int) -> Matrix:
-    return tuple(tuple(ZERO for _ in range(columns)) for _ in range(rows))
-
-
 def identity(dimension: int) -> Matrix:
     return tuple(
         tuple(ONE if row == column else ZERO for column in range(dimension))

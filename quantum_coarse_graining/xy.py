@@ -83,10 +83,9 @@ def xy_second_threshold_tangent_polynomial(tangent: Fraction) -> Fraction:
 def xy_middle_quartic_coefficients(
     tangent: Fraction,
 ) -> QuarticCoefficients:
-    """Return the conditional middle-branch quartic coefficients.
+    """Return the exact middle-branch quartic coefficients.
 
-    If the numerically observed ``q_Z=0`` facet is globally optimal, the
-    intermediate defect is the unique physical root of
+    The intermediate defect is the unique root in ``(1/2, 2)`` of
     ``sum(coefficients[k] * delta**(4-k), k=0..4)``.
     """
     t = Fraction(tangent)
@@ -127,12 +126,86 @@ def xy_middle_quartic(
     defect: Fraction,
     tangent: Fraction,
 ) -> Fraction:
-    """Evaluate the conditional middle-branch quartic exactly."""
+    """Evaluate the exact middle-branch quartic."""
     defect = Fraction(defect)
     coefficients = xy_middle_quartic_coefficients(tangent)
     return sum(
         coefficient * defect ** (4 - index)
         for index, coefficient in enumerate(coefficients)
+    )
+
+
+def xy_middle_discriminant(tangent: Fraction) -> Fraction:
+    """Return the factored discriminant of the middle quartic."""
+    t = Fraction(tangent)
+    positive_factor = (
+        27 * t**9
+        + 378 * t**8
+        + 1026 * t**7
+        + 2106 * t**6
+        + 2772 * t**5
+        + 2646 * t**4
+        + 1658 * t**3
+        + 678 * t**2
+        + 141 * t
+        + 16
+    )
+    return (
+        2**16
+        * t**7
+        * (1 + t * t)
+        * (t**3 - t**2 - t - 1) ** 2
+        * positive_factor**3
+    )
+
+
+def xy_middle_root_window_certificate(tangent: Fraction) -> bool:
+    """Check the exact endpoint signs and noncollision factor."""
+    t = Fraction(tangent)
+    if not Fraction(1, 4) <= t <= Fraction(19, 25):
+        raise ValueError("tangent must lie in the certified root window")
+    return (
+        xy_middle_quartic(Fraction(1, 2), t) > 0
+        and xy_middle_quartic(Fraction(2), t) < 0
+        and xy_middle_discriminant(t) > 0
+    )
+
+
+def xy_middle_join_certificate(tangent: Fraction) -> bool:
+    """Check the exact weak- and strong-branch substitution identities."""
+    t = Fraction(tangent)
+    denominator = (1 + t * t) ** 2
+    weak = 4 * t * (1 - t * t) / denominator
+    strong = 2 * t * (1 + t + t * t) / denominator
+    first_threshold = xy_first_threshold_tangent_polynomial(t)
+    second_threshold = xy_second_threshold_tangent_polynomial(t)
+    weak_cofactor = (
+        128
+        * t**3
+        * (t**4 + 2 * t**3 + 4 * t**2 + 2 * t + 1)
+        / (1 + t * t) ** 6
+    )
+    strong_positive_factor = (
+        8 * t**10
+        + 4 * t**9
+        + 35 * t**8
+        + 43 * t**7
+        + 108 * t**6
+        + 120 * t**5
+        + 143 * t**4
+        + 100 * t**3
+        + 66 * t**2
+        + 23 * t
+        + 9
+    )
+    strong_cofactor = (
+        16 * t**3 * strong_positive_factor / (1 + t * t) ** 6
+    )
+    return (
+        xy_middle_quartic(weak, t)
+        == weak_cofactor * first_threshold**2
+        and xy_middle_quartic(strong, t)
+        == strong_cofactor * second_threshold**2
     )
 
 
@@ -314,6 +387,8 @@ def xy_boundary_certificate() -> bool:
         == Fraction(97, 64)
         and xy_second_threshold_tangent_polynomial(Fraction(1, 2))
         == Fraction(-5, 8)
+        and xy_middle_root_window_certificate(Fraction(1, 2))
+        and xy_middle_join_certificate(Fraction(1, 2))
         and xy_weak_defect(weak_cosine, weak_sine) == Fraction(120, 169)
         and xy_weak_probabilities(weak_cosine, weak_sine)
         == (
