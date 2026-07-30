@@ -148,7 +148,7 @@ publication. The novelty statements are therefore phrased as
 "to our knowledge" and remain subject to independent literature review.
 The archived `v0.1.0` release is available at
 <https://doi.org/10.5281/zenodo.21706516>. Use that version-specific DOI when
-citing the results reproduced by this release.
+citing this software and reproducibility archive.
 
 Outstanding pre-publication items are tracked in the "Outstanding before
 publication" section of [`AUDIT.md`](AUDIT.md); after the `v0.1.0` archive,
