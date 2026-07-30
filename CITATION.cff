@@ -16,7 +16,6 @@ repository-code: "https://github.com/richorama/quantum-directional-signalling"
 license: MIT
 license-url: "https://github.com/richorama/quantum-directional-signalling/blob/main/LICENSE"
 version: 0.1.0
-date-released: 2026-07-30
 keywords:
   - quantum information
   - diamond norm

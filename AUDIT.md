@@ -100,8 +100,10 @@ submitted or advertised as a stable citable artefact.
       `authors`) and to the manuscript author block.
 - [ ] **Archived DOI.** Deposit a release on Zenodo (or equivalent) and add
       `doi:` to `CITATION.cff`, plus a badge in `README.md`.
-- [x] **Tagged release.** Version `0.1.0` is recorded in `CITATION.cff`; the
-      submitted release is tagged `v0.1.0` with the matching release date.
+- [ ] **Tagged release.** `CITATION.cff` advertises version `0.1.0`, but no
+      release is currently published. Tag the final submitted commit as
+      `v0.1.0`, create the matching GitHub release, and then add its release
+      date to `CITATION.cff`.
 - [ ] **arXiv posting.** Include the `paper/*.dat` files in the submission;
       the manuscript builds its figures from them through pgfplots.
 - [ ] **Independent review.** The review record below is empty. An unexecuted

@@ -51,7 +51,7 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            texlive-latex-extra texlive-fonts-recommended
+            texlive-latex-extra texlive-fonts-recommended lmodern
       - run: python paper/generate_xy_plot.py
       - name: Check generated figure data is tracked and unchanged
         run: |
