@@ -8,7 +8,9 @@ version = "0.1.0"
 description = "Exact diamond-norm certificates for directional quantum signalling"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "CC-BY-4.0"}
+# Software is MIT licensed.  The paper, documentation, figures, and data files
+# in paper/ are separately licensed CC BY 4.0; see LICENSE-CONTENT.
+license = {text = "MIT"}
 authors = [
   {name = "Richard Astbury", email = "richard.astbury@gmail.com"},
 ]
@@ -26,10 +28,17 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Physics",
 ]
 
-# The certificate package and its test suite are dependency free.  Only the
-# optional symbolic derivation in tools/derive_xy_middle.py needs SymPy.
+# The certificate package and its test suite are dependency free and support
+# every version allowed by requires-python.  The optional extras are pinned for
+# reproducibility.  Note that the `numerical` extra needs Python >= 3.9,
+# because scipy 1.13.1 does; CI therefore runs it on 3.12 only.  The `proof`
+# extra installs on the full >= 3.8 range.
 [project.optional-dependencies]
 proof = ["sympy==1.13.3"]
+numerical = [
+  "cvxpy==1.5.2",
+  "scipy==1.13.1; python_version >= '3.9'",
+]
 
 [project.urls]
 Repository = "https://github.com/richorama/quantum-directional-signalling"

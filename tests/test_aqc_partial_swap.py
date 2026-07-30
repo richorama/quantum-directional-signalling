@@ -12,6 +12,7 @@ from quantum_coarse_graining.partial_swap import (
     qudit_fixed_channel_defect,
     qudit_fixed_channel_terms,
     qudit_partial_swap_certificate,
+    qubit_strong_stationarity_polynomial,
     qudit_weak_partial_swap_defect,
     qudit_weak_threshold,
     strong_stationarity_holds,
@@ -75,6 +76,13 @@ class PartialSwapTests(unittest.TestCase):
                 Fraction(2, 3),
             )
         )
+
+    def test_strong_stationarity_quartic_has_exact_boundary_roots(self):
+        self.assertEqual(
+            qubit_strong_stationarity_polynomial(Fraction(1, 3), 1),
+            0,
+        )
+        self.assertEqual(qubit_strong_stationarity_polynomial(1, 0), 0)
 
     def test_rejects_incorrect_radical(self):
         with self.assertRaises(ValueError):

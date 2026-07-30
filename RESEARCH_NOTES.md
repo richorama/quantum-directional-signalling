@@ -21,13 +21,12 @@ interpretation is in scope.
 
 ## Literature boundary
 
-- Operator entanglement of unitaries: Zanardi, *Phys. Rev. A* 63, 012301
+- Operator entanglement of unitaries: Zanardi, *Phys. Rev. A* 63, 040304(R)
   (2001), arXiv:quant-ph/0010074.
 - Causal and semicausal operations: Beckman et al., *Phys. Rev. A* 64, 052309
   (2001), arXiv:quant-ph/0102043.
-- Information-disturbance and Stinespring continuity: Kretschmann,
-  Schlingemann and Werner, *IEEE Trans. Inf. Theory* 54, 1708 (2008),
-  arXiv:quant-ph/0605009.
+- Stinespring continuity: Kretschmann, Schlingemann and Werner,
+  *J. Funct. Anal.* 255, 1889 (2008), arXiv:0710.2495.
 - Approximate operator-algebra QEC: Beny and Oreshkov, *Phys. Rev. Lett.* 104,
   120501 (2010), arXiv:0907.5391.
 - Directional signalling and causal influence: Barsse, Perinotti, Tosini and
@@ -49,9 +48,17 @@ The quantity `delta_A(U)` is not a new measure: under the diamond norm and after
 exchanging the subsystem labels, it is exactly the directional signalling
 measure `S(U)` of Barsse et al., including its optimization over arbitrary correlated and
 ancilla-extended inputs. The 2024 paper proves `S(CNOT)<=1`; the 2025 follow-up
-proves exact CNOT and SWAP values. AQC1 independently reproduces the CNOT value
-and extends it to a continuous locally equivalent Ising family. The novelty
-claim is therefore the exact family evaluation, not the definition or endpoint.
+proves the matching lower bound and treats exact CNOT and SWAP values, including
+parallel and asymptotic uses. AQC1 independently
+reproduces the CNOT value and extends it to a continuous locally equivalent
+Ising family. The novelty claim is therefore the exact family evaluation, not
+the definition or endpoint.
+
+The 2025 paper also proves the equal-dimension universal bound
+`S(U) <= 2(1-1/d^2)` and the optimality of the depolarizing effective channel
+for SWAP. Consequently the AQC6 value `delta_A(iSWAP)=3/2` saturates the global
+two-qubit bound: iSWAP is maximally signalling despite not being locally
+equivalent to SWAP.
 
 ## Frozen results
 
@@ -236,6 +243,16 @@ For `1/3<sin(phi)<1`, a minimizer lies in `0<lambda_*<1` and satisfies
 ```text
 3[lambda_*+1-2cos^2(phi)] [sqrt(B_*)-2(1-lambda_*)/3] = B_*.
 ```
+
+Squaring gives the quartic
+
+```text
+2 lambda^4 +(18s^2-8)lambda^3 +(45s^4-43s^2+12)lambda^2
++(36s^6-54s^4+32s^2-8)lambda +5s^4-7s^2+2 = 0.
+```
+
+The quartic can contain a conjugate-sign root. The physical root must still
+satisfy the unsquared equation and `lambda_*>1-2s^2`.
 
 It reaches `lambda_*=0` and `delta=3/2` at SWAP. A dedicated search covering
 partial-SWAP collision models, covariant channel discrimination, and both

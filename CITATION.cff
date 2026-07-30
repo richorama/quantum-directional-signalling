@@ -2,10 +2,23 @@ cff-version: 1.2.0
 message: "If you use this work, please cite the repository and accompanying paper."
 title: "Exact directional signalling for continuous unitary families"
 type: software
+abstract: >-
+  Exact diamond-norm evaluations and reproducible certificates for directional
+  signalling in Ising, partial-SWAP, and XY/iSWAP unitary families.
+  This project is dual licensed: source code and software tooling under the
+  MIT licence, and the paper, documentation, figures, and data files under
+  CC BY 4.0. The `license` field below refers to the software only.
 authors:
   - family-names: Astbury
     given-names: Richard
 repository-code: "https://github.com/richorama/quantum-directional-signalling"
-license: CC-BY-4.0
+license: MIT
+license-url: "https://github.com/richorama/quantum-directional-signalling/blob/main/LICENSE"
 version: 0.1.0
 date-released: 2026-07-28
+keywords:
+  - quantum information
+  - diamond norm
+  - directional signalling
+  - partial SWAP
+  - iSWAP

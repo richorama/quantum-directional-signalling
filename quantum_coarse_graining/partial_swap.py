@@ -144,6 +144,30 @@ def strong_stationarity_holds(
     )
 
 
+def qubit_strong_stationarity_polynomial(
+    sine: Fraction,
+    shrinkage: Fraction,
+) -> Fraction:
+    """Quartic implied by the unsquared qubit stationarity equation."""
+    sine = Fraction(sine)
+    shrinkage = Fraction(shrinkage)
+    return (
+        2 * shrinkage**4
+        + (18 * sine**2 - 8) * shrinkage**3
+        + (45 * sine**4 - 43 * sine**2 + 12) * shrinkage**2
+        + (
+            36 * sine**6
+            - 54 * sine**4
+            + 32 * sine**2
+            - 8
+        )
+        * shrinkage
+        + 5 * sine**4
+        - 7 * sine**2
+        + 2
+    )
+
+
 def partial_swap_boundary_certificate() -> bool:
     """Exact weak and SWAP endpoint certificates for the scalar theorem."""
     weak_cosine = Fraction(40, 41)

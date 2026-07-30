@@ -50,7 +50,7 @@ partial-SWAP, and XY unitary families}
 Developed with the assistance of AI tools. The author is solely responsible
 for all claims, proofs, code, and errors.}}
 
-\date{Draft of 29 July 2026}
+\date{Draft of 30 July 2026}
 
 \begin{document}
 \maketitle
@@ -64,12 +64,14 @@ $B$ to $A$ is the diamond-norm distance
 \]
 This quantity was introduced by Barsse, Perinotti, Tosini, and Vaglini.
 Exact values were subsequently obtained for the CNOT and SWAP gates, but
-continuous interacting families have not been evaluated.  We give three such
-evaluations.  First, for the two-qubit Ising family
-$U_\theta=\exp(-i\theta Z\otimes Z)$, we prove
+to our knowledge continuous interacting families have not been evaluated.
+For the two-qubit Ising family
+$U_\theta=\exp(-i\theta Z\otimes Z)$, we first prove
 $\delta_A(U_\theta)=|\sin 2\theta|$ and identify an optimal dephasing channel.
-Second, for the partial-SWAP family on $\mathbb{C}^d\otimes\mathbb{C}^d$,
-$U_\phi=\cos\phi\,I-i\sin\phi\,\SWAP$, unitary covariance reduces the
+This elementary baseline fixes conventions and extends the known CNOT
+endpoint.  Our first main result concerns the partial-SWAP family on
+$\mathbb{C}^d\otimes\mathbb{C}^d$,
+$U_\phi=\cos\phi\,I-i\sin\phi\,\SWAP$, where unitary covariance reduces the
 optimization to one depolarizing parameter $\lambda$.  We evaluate the
 fixed-$\lambda$ diamond norm in closed form and thereby reduce the full
 problem to a scalar convex minimization.  In the weak-interaction regime
@@ -77,12 +79,15 @@ $0\leq\sin\phi\leq(d^2-3)/(d^2-1)$, the result simplifies to
 $\delta_A(U_\phi)=2\sin\phi$; beyond this dimension-dependent threshold the
 optimal effective channel moves away from the identity, reaching the known
 SWAP value $2(1-1/d^2)$.
-Third, for the XY line $e^{-i\theta(XX+YY)}$, axial covariance gives an exact
+Our second main result treats the less symmetric XY line
+$e^{-i\theta(XX+YY)}$.  Axial covariance gives an exact
 two-parameter min--max formula.  Writing
 $S=\sin2\theta$, the weak branch is $\sin4\theta$, while near iSWAP the value is
-$S+S^2/2$, reaching $3/2$ at iSWAP.  In the intervening branch the value is
+$S+S^2/2$, reaching the global two-qubit ceiling $3/2$ at iSWAP.  In the intervening branch the value is
 the unique physical root of an explicit quartic.
-The proofs include matching operational witnesses.  We also distinguish
+The proofs include matching operational witnesses: explicit input states on
+the closed branches, and a convex--concave saddle on the intermediate one.
+We also distinguish
 these diamond-norm results from Hilbert--Schmidt operator-entanglement
 measures and provide exact-arithmetic computational certificates.
 \end{abstract}
@@ -107,27 +112,67 @@ systems through the diamond norm.
 
 Equation~\eqref{eq:defect} is not a new measure.  After exchanging subsystem
 labels, it is exactly the directional-signalling quantity introduced in
-Ref.~\cite{barsse2024}.  That work bounded the CNOT value; the follow-up
-Ref.~\cite{barsse2025} computed exact CNOT and SWAP values, including parallel
-and asymptotic uses.  Earlier work characterized causal and semicausal
-operations structurally~\cite{beckman2001,eggeling2002}, while continuity of
-Stinespring dilations supplies general non-sharp bounds~\cite{ksw2008}.
+Ref.~\cite{barsse2024}.  In their notation, signalling from $A$ to $B'$ is
+\[
+ S_{A\to B'}(\cU)
+ =\inf_{\mathcal C\ {\rm CPTP}}
+ \diamondnorm{\Tr_{A'}\circ\cU-\mathcal C\circ\Tr_A}.
+\]
+Thus Eq.~\eqref{eq:defect} is $S_{B\to A'}(\Ad_U)$: exchange their
+$A,A'$ with our hidden $B,B'$ and their $B,B'$ with our visible $A,A'$.
+Both definitions use the standard, unhalved diamond norm, so there is no
+normalization factor.  Ref.~\cite{barsse2024} gives
+$S(\mathrm{CNOT})\leq1$ as part of proving a strict separation from causal
+influence.  The follow-up Ref.~\cite{barsse2025} proves the matching lower
+bound and hence the exact equality $S(\mathrm{CNOT})=1$; it also treats SWAP,
+including parallel and asymptotic uses, and gives the qudit SWAP value used
+below.  It further proves the universal bound
+\begin{equation}
+ \delta_A(U)\leq2\left(1-\frac1{d^2}\right)
+ \label{eq:universal-swap-bound}
+\end{equation}
+for equal local dimension $d$, with equality at SWAP, and uses covariance to
+identify the completely depolarizing effective channel there.  Our
+partial-SWAP endpoint uses that precedent; the contribution is the continuous
+family and its threshold.  Earlier work characterized causal and semicausal operations
+structurally~\cite{beckman2001,eggeling2002}, while continuity of Stinespring
+dilations supplies general non-sharp bounds~\cite{ksw2008}.
 
 The present contribution is deliberately narrower than a new causal measure.
-We compute Eq.~\eqref{eq:defect} sharply for three continuous unitary families.
-The Ising result extends the CNOT endpoint.  The partial-SWAP result covers an
-interaction used in homogenization and collision models
-\cite{ziman2002,scarani2002} and reveals the dimension-dependent transition
-$\sin\phi=(d^2-3)/(d^2-1)$.  The XY/iSWAP line supplies a less symmetric
-control: it exhibits three analytic regimes, with an algebraic quartic in the
-middle.  A dedicated search found no previous evaluation of
-Eq.~\eqref{eq:defect} for any of these continuous families.
+The Ising calculation is a transparent baseline that fixes the subsystem and
+diamond-norm conventions while extending the known CNOT endpoint to its
+continuous Cartan axis.  The two substantive results are the
+arbitrary-dimensional partial-SWAP reduction and the complete XY/iSWAP phase
+diagram.  Partial SWAP is used in homogenization and collision models
+\cite{ziman2002,scarani2002} and here exhibits the dimension-dependent
+transition $\sin\phi=(d^2-3)/(d^2-1)$.  The less symmetric XY line has three
+analytic regimes, an algebraic quartic in the middle, and an iSWAP endpoint
+that saturates the global two-qubit bound.  A systematic search of the
+directional-signalling, semicausal-channel, collision-model, and two-qubit-gate
+literatures found no previous evaluation of Eq.~\eqref{eq:defect} for these
+continuous families.  The search scope and attribution boundary are recorded
+in Appendix~\ref{app:literature}; this remains a literature assessment rather
+than a theorem.
+
+The unifying phenomenon is not merely the availability of three formulas.
+As the coupling grows, the best reduced description can move from the
+identity to a deliberately noisy channel, and the input witnessing the
+unavoidable error can change at the same time.  The partial-SWAP and XY
+thresholds make this active-set transition exact.  In collision-model
+language, they identify when retaining the incoming visible state ceases to
+be the best one-step autonomous approximation.
 
 The distinction from operator entanglement is important.  Hilbert--Schmidt
 distances and the linear entropy of a vectorized unitary are useful algebraic
 diagnostics~\cite{zanardi2001}, but they do not directly give operational
 channel distinguishability.  Every result below is stated in diamond norm and
 is accompanied by both an upper bound and a matching witness.
+Likewise, tensor-product-structure geometry
+\cite{andreadakis2025}, approximate operator-algebra correction
+\cite{beny2010}, and exact Lindblad model reduction
+\cite{grigoletto2025} address related questions of subsystem structure,
+recoverability, and reduced description, but optimize different objects and
+do not yield Eq.~\eqref{eq:defect}.
 
 \subsection*{Operational picture}
 
@@ -157,12 +202,14 @@ error change with interaction strength.
  xticklabels={$0$,$\theta_1$,$\theta_2$,$\pi/4$},
  grid=major,
 ]
+\addplot[black!55,densely dotted,thick] coordinates {(0,1.5) (0.7853982,1.5)};
 \addplot[blue!65!black,very thick] table[x=theta,y=defect] {xy_curve.dat};
 \draw[dashed] (axis cs:0.25827052,0) -- (axis cs:0.25827052,1.6);
 \draw[dashed] (axis cs:0.64661551,0) -- (axis cs:0.64661551,1.6);
 \node[anchor=west] at (axis cs:0.04,0.22) {weak};
 \node[anchor=west] at (axis cs:0.37,1.16) {quartic};
 \node[anchor=east] at (axis cs:0.76,1.43) {iSWAP};
+\node[anchor=west,black!65] at (axis cs:0.02,1.52) {two-qubit ceiling};
 \end{axis}
 \end{tikzpicture}
 \caption{The exact XY directional-signalling curve.  The middle segment is the
@@ -182,7 +229,17 @@ operator
 For Hermiticity-preserving $\Phi:\cL(X)\to\cL(Y)$, we use the Watrous
 semidefinite-program characterization~\cite{watrous2009,watrous2018}.
 In the unnormalized-Choi convention used here, its Hermiticity-preserving
-specialization is
+linear primal specialization is
+\begin{equation}
+ \diamondnorm{\Phi}
+ =\max\left\{\Tr[J(\Phi)Y]:
+ \begin{array}{l}
+  \rho\geq0,\quad \Tr\rho=1,\quad Y=Y^\dagger,\\
+  -I_Y\otimes\rho\leq Y\leq I_Y\otimes\rho
+ \end{array}\right\}.
+ \label{eq:watrous-linear}
+\end{equation}
+Optimizing first over $Y$ gives the equivalent trace-norm expression
 \begin{equation}
  \diamondnorm{\Phi}
  =\max_{\rho\in\mathrm{D}(X)}
@@ -191,8 +248,20 @@ specialization is
  \label{eq:watrous}
 \end{equation}
 The maximizing $\rho$ specifies a physical witness through any purification.
-When $\Phi$ is covariant, averaging the complete primal feasible tuple over the
-symmetry group shows that an invariant maximizing density may be chosen.
+If $\Phi$ is covariant under input $R_g$ and output $S_g$, then
+\[
+ (\rho,Y)\longmapsto
+ \left(\overline{R_g}\rho R_g^{\mathsf T},
+ (S_g\otimes\overline{R_g})Y
+ (S_g\otimes\overline{R_g})^\dagger\right)
+\]
+preserves every constraint and the objective in
+Eq.~\eqref{eq:watrous-linear}.  Haar averaging this complete feasible pair
+therefore produces an invariant optimal density.  This linear averaging, not
+averaging $\rho$ inside the nonlinear right-hand side of
+Eq.~\eqref{eq:watrous}, is the symmetry argument used below.  The same SDP
+also shows that its optimal value is concave in $\rho$: feasible pairs at two
+densities can be convexly combined.
 
 We use the maps
 \[
@@ -279,20 +348,21 @@ bound.
 
 At $\theta=\pi/4$, $U_\theta$ is locally equivalent to CZ and CNOT.
 Equation~\eqref{eq:ising-result} then reproduces the exact CNOT value one,
-already obtained in Ref.~\cite{barsse2025}.  The continuous formula, rather
-than that endpoint, is the result of Theorem~\ref{thm:ising}.
+already obtained in Refs.~\cite{barsse2024,barsse2025}.  The continuous
+formula, rather than that endpoint, is the result of
+Theorem~\ref{thm:ising}.
 
 \section{The partial-SWAP family in dimension \texorpdfstring{$d$}{d}}
 
 Let $A\cong B\cong\mathbb{C}^d$ and consider
 \begin{equation}
- U_\phi=cI-isS,\qquad S=\SWAP,\qquad c=\cos\phi,\quad s=\sin\phi,
+ U_\phi=cI-is\,\SWAP,\qquad c=\cos\phi,\quad s=\sin\phi,
  \label{eq:partial-swap}
 \end{equation}
 for $0\leq\phi\leq\pi/2$.  For qubits, the equal-angle Cartan interaction is
 this family up to global phase:
 \[
- e^{-it(XX+YY+ZZ)}=e^{it}e^{-2itS},\qquad \phi=2t.
+ e^{-it(XX+YY+ZZ)}=e^{it}e^{-2it\SWAP},\qquad \phi=2t.
 \]
 
 \subsection{Reduction to depolarizing channels}
@@ -318,17 +388,17 @@ where $\Tr_A X$ is relabelled onto the output copy of $A$.
 
 Define
 \begin{align}
- A&=1-\lambda,&
- B&=A^2+d^2\lambda s^2,\nonumber\\
- H_0&=\frac{d(d^2-3)}{d^2-1},&
- H_1&=\frac{2}{d^2-1}.
+ r&=1-\lambda,&
+ b&=r^2+d^2\lambda s^2,\nonumber\\
+ h_0&=\frac{d(d^2-3)}{d^2-1},&
+ h_1&=\frac{2}{d^2-1}.
  \label{eq:general-terms}
 \end{align}
-For $B>0$, also put
+For $b>0$, also put
 \begin{equation}
- Q=A^2(H_0^2-H_1^2)+4B,\quad
- C=1-\frac{A^2H_1^2}{4B},\quad
- D=\frac{AH_0+\sqrt Q}{C}.
+ q=r^2(h_0^2-h_1^2)+4b,\quad
+ k=1-\frac{r^2h_1^2}{4b},\quad
+ z=\frac{rh_0+\sqrt q}{k}.
  \label{eq:general-D}
 \end{equation}
 
@@ -339,33 +409,38 @@ Let
  d_{d,\phi}(\lambda)
  =\diamondnorm{\cN_{U_\phi}-\cE_\lambda\cT}.
 \]
-Apart from the identity point $B=0$, where the norm vanishes,
+Apart from the identity point $b=0$, where the norm vanishes,
 \begin{equation}
  d_{d,\phi}(\lambda)=
  \begin{cases}
-  D/d, & AH_1D\leq4B,\\[2pt]
-  2A(H_0+H_1)/d, & AH_1D>4B.
+  z/d, & rh_1z\leq4b,\\[2pt]
+  2r(h_0+h_1)/d, & rh_1z>4b.
  \end{cases}
  \label{eq:fixed-norm}
 \end{equation}
-The quantities $B$ and $C$ are positive and $Q$ is nonnegative on the CPTP
+The quantities $b$ and $k$ are positive and $q$ is nonnegative on the CPTP
 interval away from that identity point, so the closed form is well defined.
+The lemma is asserted, and proved, on the \emph{whole} admissible interval
+$-1/(d^2-1)\leq\lambda\leq1$, including negative $\lambda$; the outer
+minimization later uses only $0\leq\lambda\leq1$, so the closed form is
+established on a strictly larger range than is subsequently needed.
 \end{lemma}
 
 \begin{proof}
 The Watrous SDP is invariant under the simultaneous $V\otimes V$ covariance
-action.  Averaging its complete primal feasible tuple therefore preserves both
-feasibility and objective value, and Schur--Weyl duality permits an optimal
-input density
+action.  We average the full linear primal feasible tuple, not the nonlinear
+right-hand side of Eq.~\eqref{eq:watrous}.  Affineness preserves feasibility
+and objective value, and Schur--Weyl duality then permits an optimal input
+density
 \[
  \rho=xP_-+yP_+,\qquad r_-x+r_+y=1,
  \quad r_\pm=\frac{d(d\pm1)}2.
 \]
 Let $u=r_+y$ be its total symmetric-subspace weight.  Put
 \[
- P=\frac{(d-1)(d+2)}{d+1},\qquad
- R=\frac{(d+1)(d-2)}{d-1},\qquad
- \widetilde B=(1+\lambda)^2-4\lambda c^2.
+ \kappa_+=\frac{(d-1)(d+2)}{d+1},\qquad
+ \kappa_-=\frac{(d+1)(d-2)}{d-1},\qquad
+ \mathcal B=(1+\lambda)^2-4\lambda c^2.
 \]
 For
 \[
@@ -373,7 +448,34 @@ For
  J(\cN_{U_\phi}-\cE_\lambda\cT)
  (I\otimes\sqrt\rho),
 \]
-the Schur--Weyl blocks give the spectrum
+the block decomposition can be made explicit.  On output--input space
+$A_{\rm out}\otimes A_{\rm in}\otimes B_{\rm in}$ define
+\[
+ |v_a^\pm\rangle=
+ \frac{1}{\sqrt{2(d\pm1)}}\sum_{j=1}^d
+ |j\rangle\otimes
+ (|j,a\rangle\pm|a,j\rangle),\qquad a=1,\ldots,d.
+\]
+The vectors $v_a^\pm$ span the only subspaces coupled between the symmetric
+and antisymmetric input sectors.  Inside
+$A_{\rm out}\otimes\operatorname{Sym}^2(\mathbb C^d)$, the
+orthogonal complement of $\operatorname{span}\{v_a^+\}$ carries the scalar
+$-(1-\lambda)y/d$.  Inside
+$A_{\rm out}\otimes\wedge^2(\mathbb C^d)$, the orthogonal
+complement of $\operatorname{span}\{v_a^-\}$ carries
+$-(1-\lambda)x/d$.  For each $a$, the two-dimensional space
+$\operatorname{span}\{v_a^-,v_a^+\}$ carries, in that order, the block
+\[
+ \begin{pmatrix}
+  \dfrac{(d+1)(d-2)}{2d}(1-\lambda)x&\overline\omega\\[5pt]
+  \omega&\dfrac{(d-1)(d+2)}{2d}(1-\lambda)y
+ \end{pmatrix},
+ \qquad
+  |\omega|^2=\frac{d^2-1}{4}xy\,\mathcal B .
+\]
+The phase of $\omega$ depends on the phase convention for $v_a^\pm$ and does
+not affect the spectrum.  Using $u=r_+y$, $1-u=r_-x$, its trace and determinant
+give the remaining roots below.  Thus the complete spectrum is
 \begin{center}
 \begin{tabular}{@{}lll@{}}
 \toprule
@@ -388,18 +490,24 @@ $\nu_+,\nu_-$ & $d$ each\\
 where
 \begin{align}
  \nu_++\nu_-&=\frac{1-\lambda}{d^2}
- [Pu+R(1-u)],\nonumber\\
+ [\kappa_+u+\kappa_-(1-u)],\nonumber\\
  \nu_+\nu_-&=\frac{u(1-u)}{d^2}
- \left[\frac{(1-\lambda)^2}{d^2}PR-\widetilde B\right].
+ \left[\frac{(1-\lambda)^2}{d^2}\kappa_+\kappa_- -\mathcal B\right].
  \label{eq:general-roots}
 \end{align}
-The last product is nonpositive.  Summing all eigenvalue magnitudes gives
+Indeed $\kappa_+\kappa_-=d^2-4$ and
+\[
+ \mathcal B-\frac{(1-\lambda)^2}{d^2}\kappa_+\kappa_-
+ =\frac{4b}{d^2}\geq0,
+\]
+so the last product is nonpositive even when $\lambda<0$.  Summing all
+eigenvalue magnitudes gives
 \begin{equation}
  d_{d,\phi}(\lambda)
  =\max_{0\leq u\leq1}\left\{
- \frac{1-\lambda}{d}[Pu+R(1-u)]
- +\sqrt{\frac{(1-\lambda)^2}{d^2}[Pu-R(1-u)]^2
-              +4u(1-u)\widetilde B}
+ \frac{1-\lambda}{d}[\kappa_+u+\kappa_-(1-u)]
+ +\sqrt{\frac{(1-\lambda)^2}{d^2}
+ [\kappa_+u-\kappa_-(1-u)]^2+4u(1-u)\mathcal B}
  \right\}.
  \label{eq:general-u}
 \end{equation}
@@ -407,18 +515,37 @@ The last product is nonpositive.  Summing all eigenvalue magnitudes gives
 With $t=2u-1$, elementary algebra turns Eq.~\eqref{eq:general-u} into
 \begin{equation}
  \max_{-1\leq t\leq1}\frac1d\left[
- A(H_0+H_1t)
- +\sqrt{A^2(H_0+H_1t)^2+4B(1-t^2)}
+ r(h_0+h_1t)
+ +\sqrt{r^2(h_0+h_1t)^2+4b(1-t^2)}
  \right].
  \label{eq:general-t}
 \end{equation}
+Here one uses
+$\kappa_+\kappa_-=d^2-4=h_0^2-h_1^2$; this identity accounts for the
+apparently different linear and radical coefficients in
+Eqs.~\eqref{eq:general-u} and~\eqref{eq:general-t}.
 If the maximum is interior, its location is
-$t_*=AH_1D/(4B)$ and its value is $D/d$.  The condition $t_*\leq1$ gives the
-first branch of Eq.~\eqref{eq:fixed-norm}; otherwise the maximum is at $t=1$
-and gives its second branch.  The maximizing $\rho$, together with any
-purification, realizes the matching lower-bound witness; the symmetrized SDP
-calculation supplies the upper bound.
+$t_*=rh_1z/(4b)$ and its value is $z/d$.  Since every factor in $t_*$ is
+nonnegative, a maximum at $t=-1$ cannot occur.  The condition $t_*\leq1$
+gives the first branch of Eq.~\eqref{eq:fixed-norm}; otherwise the maximum is
+at $t=1$ and gives its second branch.  The dimensions of the two scalar
+complements are respectively $d(d-1)(d+2)/2$ and
+$d(d+1)(d-2)/2$, so the displayed blocks account for all $d^3$ eigenvalues.
+The maximizing $\rho$, together with any purification, realizes the matching
+lower-bound witness; Eq.~\eqref{eq:watrous-linear} supplies the upper bound.
 \end{proof}
+
+\begin{remark}[Status of the general-$d$ spectrum]
+\label{rem:generald}
+The block decomposition just given is a hand calculation valid for every
+$d\geq2$: the vectors $v_a^\pm$ are defined uniformly in $d$, and the stated
+multiplicities $d(d-1)(d+2)/2$, $d(d+1)(d-2)/2$, and $d$, $d$ sum to $d^3$,
+so no eigenvalue is unaccounted for at any dimension.  The accompanying
+script \texttt{tools/verify\_block\_reductions.py} reconstructs the unreduced
+physical Choi operator and confirms this spectrum for $d=2,3,4$ only.  Those
+checks are therefore a spot check of the algebra above, not the source of the
+all-$d$ claim, which rests on the Schur--Weyl argument in the proof.
+\end{remark}
 
 \subsection{Optimization and the dimension-dependent threshold}
 
@@ -439,6 +566,45 @@ with $d_{d,\phi}$ given explicitly by Eq.~\eqref{eq:fixed-norm}.  Moreover,
  \label{eq:weak-branch}
 \end{equation}
 For stronger non-SWAP coupling, a minimizer lies in $0<\lambda_*<1$.
+Equation~\eqref{eq:scalar-min} is an exact one-dimensional convex
+characterization in this regime.  For qubits the interior minimizer is
+algebraic: writing $s=\sin\phi$, it satisfies the unsquared stationarity
+equation
+\begin{equation}
+ 3(\lambda_*-1+2s^2)
+ \left[\sqrt{(1+\lambda_*)^2-4\lambda_*(1-s^2)}
+       -\frac{2(1-\lambda_*)}{3}\right]
+ =(1+\lambda_*)^2-4\lambda_*(1-s^2).
+ \label{eq:qubit-swap-stationarity}
+\end{equation}
+In particular it is a root of the explicit quartic
+\begin{align}
+ \mathcal P(\lambda,s)={}&2\lambda^4+(18s^2-8)\lambda^3
+ +(45s^4-43s^2+12)\lambda^2\nonumber\\
+ &+(36s^6-54s^4+32s^2-8)\lambda
+ +5s^4-7s^2+2,\qquad
+ \mathcal P(\lambda_*,s)=0.
+ \label{eq:qubit-swap-quartic}
+\end{align}
+Roots introduced by eliminating the square root are discarded using
+Eq.~\eqref{eq:qubit-swap-stationarity}.  In particular, positivity of its
+right-hand side and of the bracket on the physical branch forces
+\begin{equation}
+ \lambda_*>1-2s^2.
+ \label{eq:qubit-swap-selector}
+\end{equation}
+The quartic may have an additional root in $(0,1)$, but that root solves the
+conjugate equation with the opposite square-root sign.  The endpoint
+factorizations
+\[
+ \mathcal P(0,s)=(s^2-1)(5s^2-2),\qquad
+ \mathcal P(1,s)=4s^4(9s^2-1)
+\]
+for the left-hand side $\mathcal P$ of
+Eq.~\eqref{eq:qubit-swap-quartic} make these possible extraneous-root changes
+explicit.  For general $d$, Eq.~\eqref{eq:scalar-min} remains the exact
+characterization; we do not claim a useful generic radicals expression after
+the outer minimization.
 At $\phi=\pi/2$,
 \begin{equation}
  \lambda_*=0,\qquad
@@ -469,6 +635,22 @@ places a minimizer in $(0,1)$.  At SWAP the minimizer is $\lambda=0$;
 Eq.~\eqref{eq:general-t} is maximized at $t=1/d$, corresponding to
 $\rho=I/d^2$, and yields Eq.~\eqref{eq:swap-d}, in agreement with
 Ref.~\cite{barsse2025}.
+
+For $d=2$ and $1/3<s<1$, differentiating the interior-maximizer branch of
+Eq.~\eqref{eq:fixed-norm} gives
+Eq.~\eqref{eq:qubit-swap-stationarity}.  On $0<\lambda<1$ the interior-maximizer branch is automatic, since
+\[
+ b-\frac{4(1-\lambda)^2}{9}
+ =\frac{5(1-\lambda)^2+36\lambda s^2}{9}>0.
+\]
+Squaring once gives $-4\mathcal P(\lambda,s)=0$.  Equation
+\eqref{eq:qubit-swap-selector} records the sign lost in this squaring step.
+Conversely, any $\lambda\in(0,1)$ satisfying the unsquared equation has zero
+derivative and is therefore globally minimizing by convexity.  There can be
+only one such root: two distinct stationary minimizers would make the convex
+analytic objective constant on an interval, contrary to its nonconstant
+derivative.  Thus Eq.~\eqref{eq:qubit-swap-selector} selects $\lambda_*$ from
+any conjugate-sign quartic root.
 \end{proof}
 
 \begin{table}[t]
@@ -487,6 +669,39 @@ $d$ & $(d^2-3)/(d^2-1)$ & $2(1-1/d^2)$\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=0.82\textwidth,
+ height=0.40\textwidth,
+ xlabel={partial-SWAP angle $\phi$},
+ ylabel={optimizer parameter},
+ xmin=0, xmax=1.5707964,
+ ymin=0, ymax=1.04,
+ xtick={0,0.3398369,0.7853982,1.5707964},
+ xticklabels={$0$,$\arcsin(1/3)$,$\pi/4$,$\pi/2$},
+ legend style={at={(0.02,0.04)},anchor=south west},
+ grid=major,
+]
+\addplot[blue!65!black,very thick]
+ table[x=phi,y=shrinkage] {partial_swap_phase.dat};
+\addlegendentry{channel shrinkage $\lambda_*$}
+\addplot[orange!80!black,very thick,dashed]
+ table[x=phi,y=symmetric_weight] {partial_swap_phase.dat};
+\addlegendentry{symmetric witness weight $u_*$}
+\draw[densely dashed] (axis cs:0.3398369,0) -- (axis cs:0.3398369,1.04);
+\end{axis}
+\end{tikzpicture}
+\caption{Optimizer transition for qubit partial SWAP.  The effective channel
+remains the identity until $\sin\phi=1/3$ and then becomes progressively more
+depolarizing.  Simultaneously, the invariant diamond witness shifts from equal
+total symmetric/antisymmetric weight $u_*=1/2$ toward $u_*=3/4$ at SWAP.
+The plotted interior values solve the scalar optimization in
+Eq.~\eqref{eq:scalar-min}.}
+\label{fig:partial-swap-phase}
+\end{figure}
 
 \section{The XY/iSWAP line}
 
@@ -549,8 +764,10 @@ Then
 \end{lemma}
 
 \begin{proof}
-Average the complete primal diamond-SDP tuple over joint axial rotations and
-$X\otimes X$.  The residual odd-sector coherence changes sign under the
+Average the complete linear primal diamond-SDP tuple over joint axial
+rotations and $X\otimes X$; averaging only the density in
+Eq.~\eqref{eq:watrous} would not justify the reduction.  The residual
+odd-sector coherence changes sign under the
 real-linear involution
 \[
  X\longmapsto(Z\otimes I)X^*(Z\otimes I),
@@ -562,10 +779,26 @@ an optimal density of the form
  \rho=A(|00\rangle\langle00|+|11\rangle\langle11|)
  +B(|01\rangle\langle01|+|10\rangle\langle10|).
 \]
-Inserting $\rho$ in Eq.~\eqref{eq:watrous}, the scaled Choi operator splits
-into two unitarily equivalent blocks.  Each has one scalar eigenvalue
-$-\alpha$ and the three eigenvalues of Eq.~\eqref{eq:xy-m3}, which proves
-Eq.~\eqref{eq:xy-fixed-norm}.  For reference, the characteristic polynomial
+Inserting $\rho$ in Eq.~\eqref{eq:watrous}, the scaled Choi operator commutes
+with the axial charge
+\[
+ Q_{\rm ax}=\frac12
+ (Z_{A_{\rm out}}-Z_{A_{\rm in}}-Z_{B_{\rm in}}),
+\]
+where the input signs reflect the conjugate covariance action.  Its four
+charge sectors have dimensions $1,3,3,1$.  The sector spanned by
+$|011\rangle$ contributes the eigenvalue $-\alpha$, while the ordered basis
+\[
+ |000\rangle,\qquad
+ \frac{|101\rangle+|110\rangle}{\sqrt2},\qquad
+ \frac{|101\rangle-|110\rangle}{\sqrt2}
+\]
+gives Eq.~\eqref{eq:xy-m3}.  The symmetry $X^{\otimes3}$ reverses the charge
+and carries these sectors to the isolated vector $|100\rangle$ and the
+three-dimensional sector formed from $|111\rangle,|010\rangle,|001\rangle$.
+The latter is unitarily equivalent after conjugating phases.  This accounts
+for all eight dimensions and proves Eq.~\eqref{eq:xy-fixed-norm}.  For
+reference, the characteristic polynomial
 $x^3+p_2x^2+p_1x+p_0$ of $M_3$ has
 \begin{align*}
  p_2&=-\alpha,\\
@@ -604,6 +837,21 @@ and let $\theta_2=0.646615513406\ldots$ solve
  \label{eq:xy-second-threshold}
 \end{equation}
 Equivalently, $\tan\theta_2$ is the positive root of $t^3+t^2-1=0$.
+The middle interval lies inside $(\pi/24,5\pi/24)$.  Indeed, direct
+substitution at $\theta=\pi/24$ gives
+\[
+ 2SC-(3C^3+C^2-C-1)
+ =1-\frac{11\sqrt2+5\sqrt6}{16}-\frac{\sqrt3}{4}<0,
+\]
+so $\theta_1>\pi/24$.  The polynomial $t^3+t^2-1$ is strictly increasing for
+$t>0$ and at $t=\tan(5\pi/24)$ equals
+$-96-67\sqrt2+55\sqrt3+39\sqrt6>0$, so
+$\theta_2<5\pi/24$.  Consequently
+\begin{equation}
+ 2SC=\sin4\theta>\frac12
+ \quad\text{throughout }(\theta_1,\theta_2).
+ \label{eq:xy-middle-lower-window}
+\end{equation}
 
 \begin{theorem}[Closed XY signalling branches]
 \label{thm:xy}
@@ -636,12 +884,35 @@ Eq.~\eqref{eq:xy-fixed-norm} gives
  \sqrt{[w-(C^2-S^2)]^2+4S^2C^2}\geq2SC.
 \]
 This is the weak lower bound.  For the channel in Eq.~\eqref{eq:xy-weak}, let
-$H_1=(SC/2)I-M_3(A)$.  Its leading principal minor is
+$K_1=(SC/2)I-M_3(A)$.  Its leading principal minor is
 $S(C-2AS)/2$, and its $(2,3)$ principal minor is
-$AC^2(A-1)(C-1)(C+1)$.  The remaining order-two minor is nonnegative after
-completing its quadratic square.  Finally,
+$AC^2(A-1)(C-1)(C+1)$.  The other two order-two principal
+minors coincide and equal
 \[
- \det H_1=\frac{AC(C-1)}4K(A),
+ \left(\frac{SC}{2}-AS^2\right)\frac{SC}{2}
+ -\frac{A(1/2-A)}{2}\left[C^2(1-C)^2+S^2\right].
+\]
+As a quadratic in $A$, its leading coefficient is
+$(C-1)(C^3-C^2-C-1)/2>0$.  With $\tau=\tan\theta$, its discriminant is
+\[
+ \frac{\tau^4}{(1+\tau^2)^8}
+ \left(\tau^{12}-10\tau^{10}-8\tau^9+31\tau^8+16\tau^7
+ -36\tau^6-32\tau^5+23\tau^4+16\tau^3
+ +14\tau^2+8\tau-7\right).
+\]
+The first threshold obeys $\tan\theta_1<27/100$; this rational enclosure is
+established in Appendix~\ref{app:xy-audit} from the strict sign change
+$p_1(1/4)<0<p_1(27/100)$ of the exact threshold polynomial, and it is what
+makes the following estimate valid across the entire weak interval rather
+than at sampled angles.  Since $0<\tau<27/100$ throughout, and since every
+positive monomial in the bracket is increasing in $\tau$ on that range,
+dropping the negative monomials and evaluating each positive monomial at the
+\emph{upper} enclosure $\tau=27/100$ gives an upper bound for the bracket
+excluding its constant term; that sum is below $3.63<7$, so the discriminant
+is nonpositive.  Completing
+the square therefore proves both coincident minors nonnegative.  Finally,
+\[
+ \det K_1=\frac{AC(C-1)}4K(A),
 \]
 where $K$ is convex and
 \[
@@ -654,8 +925,11 @@ convexity gives $K(A)\leq0$.  Moreover,
  \det M_3=-\frac{AC^2(2A-1)^2(C-1)^3(C+1)}4\geq0,
 \]
 while the sum of its order-two principal minors is nonpositive.  Thus $M_3$
-has one nonnegative and two nonpositive eigenvalues.  The principal minors
-above give $H_1\geq0$, hence $\lambda_{\max}(M_3)\leq SC/2$; together with the
+has one nonnegative and two nonpositive eigenvalues: three positive
+eigenvalues would make the order-two sum positive, while two positive and one
+negative would make the determinant negative; the zero cases follow by
+continuity.  The principal minors
+above give $K_1\geq0$, hence $\lambda_{\max}(M_3)\leq SC/2$; together with the
 inertia identity following Eq.~\eqref{eq:xy-minmax}, this makes
 Eq.~\eqref{eq:xy-fixed-norm} at most $2SC$.  This proves
 Eq.~\eqref{eq:xy-weak} and identifies the first threshold.
@@ -670,9 +944,11 @@ At $A=1/4$, the largest eigenvalue of $M_3$ is
 with eigenvector proportional to $(i\sqrt2,1,1)$.  The other two eigenvalues
 have sum $-S/4$ and product
 $S^2(7S^2+2S-8)/64$, so they are negative throughout this regime.
-The derivatives of $L$ in both $u$ and $w$ vanish.  Convexity of the trace
-norm in the channel parameters therefore proves that the fixed
-$A=1/4$ witness has global minimum $4L=S+S^2/2$.
+Indeed $S\geq S(\theta_2)>0.96$, whereas the positive root of
+$7S^2+2S-8$ is below $0.94$.  The derivatives of $L$ in both $u$ and $w$
+vanish.  Since $\lambda_{\max}$ is convex for an affine Hermitian matrix
+family, the fixed $A=1/4$ witness gives the global lower bound
+$4L=S+S^2/2$.
 
 It remains to prove the matching upper bound.  Put $H_3=LI-M_3(A)$.  Direct
 factorization gives
@@ -688,7 +964,8 @@ with $t=2A$,
  G_2={}&(12S^2-16)t^2+(32-24S^2)t+13S^2+4S-12.
 \end{align*}
 $G_1$ has positive completed-square minimum, while $G_2$ is concave with
-nonnegative endpoint values $13S^2+4S-12$ and $(S+2)^2$.  Together with
+nonnegative endpoint values $13S^2+4S-12$ and $(S+2)^2$; the first is already
+positive for $S>0.82$, below the strong-regime range.  Together with
 $(H_3)_{11}=S(S+2-4AS)/8$, all principal minors are nonnegative, so
 $H_3\geq0$.  In addition,
 \[
@@ -701,6 +978,66 @@ Eq.~\eqref{eq:xy-fixed-norm} is at most $4L$.  This proves
 Eq.~\eqref{eq:xy-strong}.  At $S=1$, the four probabilities are $1/4$ and the
 value is $3/2$.
 \end{proof}
+
+Before treating the intermediate regime we isolate its convex-analytic
+skeleton, so that the algebraic elimination that follows can be carried out
+against a single, already-justified optimality certificate.
+
+\begin{lemma}[Facet selection and convex KKT sufficiency]
+\label{lem:facet}
+Fix $\theta$ and parametrize the axially covariant effective channels of
+Eq.~\eqref{eq:xy-channel} by their Bloch eigenvalues $(u,u,w)$.  Then the
+following hold.
+\begin{enumerate}
+\item[(i)] \emph{(Convexity.)}  The admissible set
+$\mathcal T=\{(u,w): -1\leq w\leq1,\ |u|\leq(1+w)/2\}$ is a triangle with
+vertices $(0,-1)$, $(1,1)$, and $(-1,1)$, and the facet $q_Z=0$ is the edge
+$w=2u-1$.  The fixed-channel diamond norm
+$F(u,w)=\diamondnorm{\cN-\cE_{u,w}\cT}$ is convex and continuous on
+$\mathcal T$, being the norm of a map affine in $(u,w)$.
+\item[(ii)] \emph{(Concavity and a unique saddle.)}  For fixed $(u,w)$ the
+Watrous primal value is concave in the invariant witness parameter
+$A\in[0,1/2]$, and its maximizer $A_*(u,w)$ is unique.  Consequently
+$F$ is a convex--concave min--max whose value is attained at a saddle, and
+by Berge's maximum theorem the saddle depends continuously on $\theta$.
+\item[(iii)] \emph{(Sufficiency.)}  Suppose $(u_\star,w_\star)$ lies on the
+edge $w=2u-1$, the directional derivative of $F$ along that edge vanishes,
+and $F$ admits a subgradient whose normal component points into
+$q_Z\geq0$.  Then $(u_\star,w_\star)$ minimizes $F$ over the whole triangle
+$\mathcal T$, not merely over the edge.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) The vertex description is immediate from the constraints, and $q_Z=0$ is
+exactly $w=2u-1$.  The map $\cE_{u,w}$ is affine in $(u,w)$, hence so is
+$\cN-\cE_{u,w}\cT$; a norm of an affine function is convex, and convex finite
+functions on a polytope are continuous.
+
+(ii) The feasible pairs $(\rho,Y)$ of the Watrous primal form a convex set
+and the objective is linear, so the value is concave in $\rho$; the invariant
+density is affine in $A$, giving concavity in $A$.  Uniqueness is proved with
+Eq.~\eqref{eq:xy-middle-characteristic} below: a maximizing interval would
+force the cubic $P(\ell;A,u)$ to vanish identically in $A$, contradicting the
+leading coefficient $-\Theta$.  A convex--concave function on a product of
+compact convex sets has a saddle by Sion's minimax theorem, and the
+maximum theorem gives continuity of the saddle correspondence; single-valued
+continuity follows from the uniqueness just established.
+
+(iii) This is the standard first-order condition for a convex function on a
+polytope.  Vanishing derivative along the edge together with a subgradient
+whose normal component points inward means that some subgradient lies in the
+normal cone of $\mathcal T$ at $(u_\star,w_\star)$, i.e.\
+$0\in\partial F(u_\star,w_\star)+N_{\mathcal T}(u_\star,w_\star)$.  For a
+convex $F$ this normal-cone inclusion is sufficient, not merely necessary,
+for a global minimum over $\mathcal T$.  In particular no other edge or
+vertex of the triangle can beat it, so the remaining facets need not be
+examined separately.
+\end{proof}
+
+Lemma~\ref{lem:facet}(iii) is what reduces the intermediate regime to a
+single algebraic computation: it suffices to exhibit one facet point with
+vanishing tangential derivative and a positive normal multiplier.
 
 \begin{theorem}[Intermediate XY branch]
 \label{thm:xy-middle}
@@ -717,80 +1054,490 @@ $\delta_A(U_\theta)$ is the unique root $\Delta\in(1/2,2)$ of
 \end{align}
 \end{theorem}
 
+\begin{remark}[Computer-assisted status]
+\label{rem:cas}
+Theorem~\ref{thm:xy-middle} is a computer-assisted result.  The convex
+analysis selecting the active facet, recorded in Lemma~\ref{lem:facet} and in
+the first part of the proof below, is fully human-checkable.  The subsequent
+eliminations are not: the exclusion of the conjugate sheet $W_-$, the
+resultant factorization producing $Q_+$, the positivity of its cofactors, and
+the Sturm root count are polynomial identities and sign conditions in up to
+four variables with integer coefficients of large height.  They are stated in
+Appendix~\ref{app:xy-audit} and \emph{verified in exact rational arithmetic}
+by the script \texttt{tools/derive\_xy\_middle.py} accompanying this
+manuscript, which is part of the proof of record rather than an illustration.
+Because every such step is an identity or a strict inequality between
+polynomials with exact rational coefficients, the verification is decidable
+and involves no floating-point arithmetic, rounding, or numerical root
+finding.  A reader wishing to check Theorem~\ref{thm:xy-middle} independently
+should re-run that script, or re-derive the same resultants and Sturm
+sequences in any computer algebra system.
+\end{remark}
+
 \begin{proof}
 We first prove the active facet.  On $q_Z=0$, write $w=2u-1$,
-$B=1/2-A$, and let $\lambda$ be the largest eigenvalue of $M_3(A)$.  Put
+$B=1/2-A$, and let $\ell$ be the largest eigenvalue of $M_3(A)$.  Put
 \[
  m=(u-C)^2+S^2,\quad N=(u-C^2)^2+C^2S^2,\quad
  \Theta=u(1-u)(1-C)^2.
 \]
 The characteristic polynomial becomes
 \begin{equation}
- P(\lambda;A,u)=\lambda^3-A(1-u)\lambda^2
- -(ABm+B^2N)\lambda-AB^2\Theta.
+ P(\ell;A,u)=\ell^3-A(1-u)\ell^2
+ -(ABm+B^2N)\ell-AB^2\Theta.
  \label{eq:xy-middle-characteristic}
 \end{equation}
 Thus $\det M_3=AB^2\Theta\geq0$, while the sum of its order-two
 principal minors is $-(ABm+B^2N)\leq0$.  In the interior $M_3$ has one
 positive and two negative eigenvalues, so the fixed-witness objective is
-$4\lambda$ and $P_\lambda>0$.
+$4\ell$ and $P_\ell>0$.
+
+At $A=0$, the largest root is $\ell_0=\sqrt N/2$.  Implicit differentiation
+of Eq.~\eqref{eq:xy-middle-characteristic}, using
+$P_\ell(\ell_0;0,u)=N/2$, gives
+\begin{equation}
+ 4\ell'(0)=\frac{2}{N}\Xi(u),\qquad
+ \Xi(u)=(1-u)N+\Theta-\sqrt N(2N-m).
+ \label{eq:xy-activity}
+\end{equation}
+Thus $\Xi$ is the exact one-sided activity test for moving from $A=0$ into
+$A>0$.
 
 For fixed channel parameters, the diamond-SDP value is concave in its input
-density: the feasible pairs $(\rho,Y)$ in the Watrous primal form a convex
-set and the objective is linear.  Since the invariant density is affine in
-$A$, the objective is concave in $A$.  Its maximizer is unique, since
-otherwise an interval of maximizing $A$ values would make the cubic
-$P(\lambda;A,u)$ vanish identically despite its leading coefficient
-$-\Theta$.  The resulting facet objective $f(u)$ is convex and continuous.
-Its endpoint derivatives point inward, and its minimizer has
-$0<u<1$ and $0<A<1/2$ in the intermediate interval.  At $A=0$ the only
-possible stationary value is $u=C^2$, where the inward derivative has sign
+density, and the resulting facet objective $f(u)$ is convex and continuous,
+by Lemma~\ref{lem:facet}(i)--(ii); the uniqueness of the maximizing $A$ is the
+argument promised there, namely that an interval of maximizing $A$ values
+would make the cubic $P(\ell;A,u)$ vanish identically despite its leading
+coefficient $-\Theta$.
+If its unique maximizing witness were $A=0$, Danskin's theorem would give
 \[
+ f'(u)=\frac{2(u-C^2)}
+ {\sqrt{(u-C^2)^2+C^2S^2}},
+\]
+so an interior channel minimizer could occur only at $u=C^2$.  At that point
+Eq.~\eqref{eq:xy-activity} reduces to
+\[
+ \Xi(C^2)=
  C(1-C)S[2SC-(3C^3+C^2-C-1)],
 \]
-which changes precisely at $\theta_1$.
+which is positive after $\theta_1$; hence $A=0$ is not maximizing there.
+The endpoint derivatives in $u$ point inward, while the derivative toward
+smaller $A$ excludes $A=1/2$.  Thus the middle saddle has
+$0<u<1$ and $0<A<1/2$.
 
 A flat interval of minimizing $u$ values is impossible.  Indeed,
 \[
  \operatorname{disc}_A P
- =\frac{(C-1)^2\lambda^2(2\lambda+u)}{16}R(u,\lambda,C),
- \qquad [u^7]R=(1-C)^2-8\lambda.
+ =\frac{(C-1)^2\ell^2(2\ell+u)}{16}\mathcal R(u,\ell,C),
+ \qquad [u^7]\mathcal R=(1-C)^2-8\ell.
 \]
 If $A=0$ on a subinterval, the boundary value
 $2\sqrt{(u-C^2)^2+C^2S^2}$ is strictly convex and cannot be constant.
 Hence any flat interval contains an open subinterval with $0<A<1/2$, where
 the displayed discriminant applies.
-Constancy on an interval would force $R$ to vanish identically in $u$, hence
-$4\lambda=(1-C)^2/2<1/2$, whereas the $A=0$ witness gives
-$4\lambda\geq2SC>1/2$.  The facet saddle is therefore unique and varies
+Constancy on an interval would force $\mathcal R$ to vanish identically in $u$, hence
+$4\ell=(1-C)^2/2<1/2$, whereas the $A=0$ witness gives
+$4\ell\geq2SC>1/2$ by
+Eq.~\eqref{eq:xy-middle-lower-window}.  The facet saddle is therefore unique and varies
 continuously.
 
 It remains to check the normal KKT multiplier.  Holding $w$ fixed before
 restricting to the facet gives
 \[
  P_u=2ABG,\qquad
- G=(C-u)\lambda+B\Psi,\qquad
+ G=(C-u)\ell+B\Psi,\qquad
  \Psi=u^2-C(1+C)u+C.
 \]
 Here $\Psi>0$ because its discriminant is
-$C(C-1)(C^2+3C+4)<0$.  Eliminating $A,u,\lambda$ from
+$C(C-1)(C^2+3C+4)<0$.  Eliminating $A,u,\ell$ from
 $P=P_A=P_u+2P_w=G=0$, after saturating the interior factors, gives
 \[
  5C^3+C^2+3C-1=0.
 \]
 This is exactly the second-threshold equation.  At $\theta_1$ the
-limiting weak saddle has $A=0$, $u=C^2$, $\lambda=SC/2$, and
+limiting weak saddle has $A=0$, $u=C^2$, $\ell=SC/2$, and
 \[
  G=\frac{C(1-C)}2[(1+C)+SC]>0.
 \]
-Therefore $G>0$ throughout $(\theta_1,\theta_2)$.  The gradient of the
-actual convex channel objective is a positive multiple of the inward normal
-to $q_Z\geq0$, so the convex KKT conditions prove that this facet saddle is
-the global optimum over the CPTP triangle.
+Therefore $G>0$ throughout $(\theta_1,\theta_2)$: by
+Lemma~\ref{lem:facet}(ii) the facet saddle varies continuously in $\theta$, so
+$G$ can change sign on the open interval only by vanishing there, and the
+elimination above shows that this happens only at $\theta_2$.  The gradient of
+the convex channel objective is then a positive multiple of the inward normal
+to $q_Z\geq0$: tangential stationarity gives zero directional derivative along
+the facet, while $G>0$ supplies a subgradient with inward normal component.
+Lemma~\ref{lem:facet}(iii) applies verbatim, so the facet point is the global
+minimizer over the entire CPTP triangle, and no other edge or vertex needs to
+be examined.
+Consequently $\Delta=4\ell=\delta_A(U_\theta)$.  The $A=0$ witness and
+Eq.~\eqref{eq:xy-middle-lower-window} give
+$\Delta\geq2SC>1/2$, while
+Eq.~\eqref{eq:universal-swap-bound} gives $\Delta\leq3/2<2$.  This is the
+root window used below.
 
-We next identify its algebraic sheet.  Put $a=2A$ and
-$F=64(1+t^2)^2P(\Delta/4;a/2,u)$.  Write
-$F=P_2u^2+P_1u+P_0$.  At the saddle $F_u=0$, and direct factorization gives
+It remains to eliminate the unique saddle and identify the physical algebraic
+sheet.  After putting $a=2A$ and $\Delta=4\ell$, the stationary characteristic
+polynomial is quadratic in $u$.  Its discriminant splits into two conjugate
+factors $W_+(a,\Delta,\pm t)$.  An exact rational lower bound excludes the
+minus sheet throughout an enclosing rational window for the middle interval.
+Eliminating $a$ from the remaining sheet and witness stationarity gives
+$Q_+(\Delta,t)$ times factors that are strictly positive on the physical
+domain.  Finally, the discriminant of $Q_+$ is nonzero on that window, and an
+exact Sturm count gives one root in $(1/2,2)$.  Substitution of the two closed
+branches proves exact joining at both thresholds.  All factors, interval
+bounds, and saturation steps are given in
+Appendix~\ref{app:xy-audit}; no floating-point root selection enters this
+argument.  As recorded in Remark~\ref{rem:cas}, these four eliminations are
+carried out and checked in exact rational arithmetic by the accompanying
+script rather than by hand.
+
+Finally, we record in what sense this value is certified from below.  In the
+weak and strong regimes the lower bound is an explicitly exhibited input
+state.  Here, by contrast, the certificate is the convex--concave saddle of
+Lemma~\ref{lem:facet}(ii): the value is attained at the interior invariant
+witness $\rho(A_*)$ of the unique saddle, and Sion's minimax theorem
+guarantees that no effective channel can do better against it.  The witness is
+therefore operational and matching, but it is specified algebraically as the
+saddle coordinate rather than in closed form.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+ width=0.82\textwidth,
+ height=0.42\textwidth,
+ xlabel={XY interaction angle $\theta$},
+ ylabel={optimizer parameter},
+ xmin=0, xmax=0.7853982,
+ ymin=-1.02, ymax=1.05,
+ xtick={0,0.25827052,0.64661551,0.78539816},
+ xticklabels={$0$,$\theta_1$,$\theta_2$,$\pi/4$},
+ legend style={at={(0.02,0.04)},anchor=south west},
+ grid=major,
+]
+\addplot[blue!65!black,very thick]
+ table[x=theta,y=transverse] {xy_phase.dat};
+\addlegendentry{transverse eigenvalue $u_*$}
+\addplot[green!45!black,very thick,dashed]
+ table[x=theta,y=longitudinal] {xy_phase.dat};
+\addlegendentry{longitudinal eigenvalue $w_*$}
+\addplot[orange!85!black,very thick,dashdotted]
+ table[x=theta,y=even_weight] {xy_phase.dat};
+\addlegendentry{witness weight $A_*$}
+\draw[densely dashed] (axis cs:0.25827052,-1.02)
+ -- (axis cs:0.25827052,1.05);
+\draw[densely dashed] (axis cs:0.64661551,-1.02)
+ -- (axis cs:0.64661551,1.05);
+\end{axis}
+\end{tikzpicture}
+\caption{Optimal effective-channel eigenvalues and invariant witness along the
+XY line.  The weak regime has $A_*=0$; the middle saddle moves along the CPTP
+facet $w_*=2u_*-1$ with $0<A_*<1/2$; and the strong regime locks to
+$A_*=1/4$.  The middle values are a numerical reconstruction of the unique
+algebraic saddle proved in Theorem~\ref{thm:xy-middle}, included for
+visualization rather than as proof.}
+\label{fig:xy-phase}
+\end{figure}
+
+The full curve satisfies
+$\delta_A(\theta)=\delta_A(\pi/2-\theta)$ and returns to zero at
+$\theta=\pi/2$, where $U_{\pi/2}=Z\otimes Z$.  The symmetry follows from
+$U_{\pi/2-\theta}=(Z\otimes Z)\overline{U_\theta}$, together with invariance
+of the diamond norm under unitary conjugation and transposition.
+
+\section{Discussion}
+
+The Ising family provides the baseline mechanism: one dephasing channel is
+optimal for every coupling, and two product inputs already witness the exact
+defect.  The main transitions occur in the other two families.  Along partial
+SWAP, the optimal effective channel itself changes: it remains the identity until
+$\sin\phi=(d^2-3)/(d^2-1)$, then moves into the depolarizing interval and
+reaches complete depolarization at SWAP.  The optimal diamond witness likewise
+generally uses a reference system, as encoded by a purification of the
+symmetric/antisymmetric density in
+Lemma~\ref{lem:fixed}; Fig.~\ref{fig:partial-swap-phase} displays both
+optimizer trajectories for qubits.
+
+The XY line has less symmetry and a genuine active-set phase diagram.  Its weak
+branch is controlled by the one-excitation witness, its central iSWAP branch by
+the maximally mixed witness, and the intervening interval moves through an
+algebraic saddle, as shown in Fig.~\ref{fig:xy-phase}.  The iSWAP value $3/2$
+equals the qubit SWAP value despite the
+gates belonging to different local-equivalence classes.  By the universal
+bound~\eqref{eq:universal-swap-bound}, iSWAP is therefore a maximally
+signalling two-qubit unitary, not merely a gate that happens to share SWAP's
+value.
+
+The threshold is operational rather than spectral: it is where the outer
+channel optimization first benefits from adding depolarization.  It is not
+visible from operator entanglement alone.  This supplies a concrete example in
+which a coarse-grained autonomy question differs from a Hilbert--Schmidt
+interaction diagnostic.  For repeated-interaction and homogenization models,
+the threshold also separates a regime in which the incoming visible state is
+the best autonomous predictor from one in which deliberately forgetting part
+of that state improves the worst-case prediction.
+
+For example, in a qubit collision with $\sin\phi=4/5$, retaining the incoming
+visible state corresponds to $\lambda=1$ and has worst-case error
+$2\sin\phi=1.6$.  The physical root of
+Eqs.~\eqref{eq:qubit-swap-stationarity}--\eqref{eq:qubit-swap-quartic} is
+$\lambda_*=0.339610\ldots$, for which the error is
+$1.415252\ldots$.  Thus the minimax one-step predictor keeps only about one
+third of the incoming Bloch vector; this is the operational gain represented
+by the noise-activation transition.
+
+The result is limited in three important ways.  First, Eq.~\eqref{eq:defect}
+is a pre-existing signalling measure, not a newly defined quantity.  Second,
+the exact CNOT and SWAP endpoints are prior results
+\cite{barsse2025}; the contribution here is the continuous-family evaluation.
+Third, a closed formula for a generic two-qubit Cartan interaction
+$e^{-i(\alpha XX+\beta YY+\gamma ZZ)}$ remains open.  Joint-Pauli symmetry
+reduces the latter problem to optimization over the Pauli-channel tetrahedron, but
+the three leakage sectors interfere in trace norm and the partial-SWAP
+$U(2)$ symmetry is absent.
+In addition, the strong partial-SWAP regime is solved as an explicit scalar
+convex minimization rather than by a generic radicals formula for its
+minimizer.
+
+\section{Reproducibility}
+
+The accompanying repository separates three levels of checking, which differ
+in evidential status and should not be conflated.  Level one is a
+dependency-free Gaussian-rational suite that verifies residual identities,
+physical witnesses, channel constraints, boundary values, and exact
+substitutions into the stated formulas.  These are regression certificates:
+they do not independently prove the general block spectra, and no theorem
+depends on them.
+The focused suite is
+run from the repository root with
+\begin{verbatim}
+python3 -m unittest discover -s tests -p 'test_aqc_*.py' -v
+\end{verbatim}
+The larger symbolic identities in Theorem~\ref{thm:xy-middle} are level two.
+As stated in Remark~\ref{rem:cas}, these are \emph{not} optional: the sheet
+exclusion, resultant factorization, cofactor positivity, and Sturm count that
+complete the proof of Theorem~\ref{thm:xy-middle} are performed and checked in
+exact rational arithmetic by the first script below, which is part of the
+proof of record.  The word ``optional'' applies only to the extra Python
+dependency, not to the evidential role.  The second script is an independent
+reconstruction, in the sense of Remark~\ref{rem:generald}.
+\begin{verbatim}
+python3 -m pip install -e '.[proof]'
+python3 tools/derive_xy_middle.py
+python3 tools/verify_block_reductions.py
+\end{verbatim}
+The second script constructs the unreduced physical residual Choi operators
+directly and checks their characteristic polynomials against the
+partial-SWAP spectrum for $d=2,3,4$ and the XY scalar-plus-$M_3$ reduction.
+It does not import the certificate package.
+The defect and optimizer phase-diagram data are generated without third-party
+Python dependencies:
+\begin{verbatim}
+python3 paper/generate_xy_plot.py
+\end{verbatim}
+The code is a certificate and regression harness, with the single exception
+recorded in Remark~\ref{rem:cas}: the analytic proofs do not depend on
+floating-point optimization anywhere, and they depend on computer algebra only
+for the exact polynomial eliminations behind Theorem~\ref{thm:xy-middle}.
+The physical-Choi reconstruction
+checks representative dimensions and parameters, while the all-$d$ statement
+is the analytic block calculation in Lemma~\ref{lem:fixed}.  The generic
+interior strong-branch minimizer is characterized by
+Eqs.~\eqref{eq:scalar-min}--\eqref{eq:qubit-swap-quartic}, rather than encoded
+as a rational test value.
+
+As an independent implementation check, the repository also contains
+\begin{verbatim}
+python3 -m pip install -e '.[numerical]'
+python3 tools/check_numerical_sdp.py
+\end{verbatim}
+This optional CVXPY program does not import the exact certificate package.  It
+optimizes jointly over an unrestricted CPTP effective channel and the dual
+diamond-norm SDP, then compares the unreduced numerical optimum with sample
+points in every analytic regime.  These floating-point checks are not used as
+proof.
+
+\subsection*{Data and code availability}
+
+This work generates no experimental data.  All figure data files in the
+\texttt{paper/} directory are produced deterministically from
+\texttt{generate\_xy\_plot.py} using only the Python standard library, and are
+regenerated and compared byte-for-byte in continuous integration.  The
+manuscript source, the exact-arithmetic certificate package, the symbolic
+proof scripts of Remark~\ref{rem:cas}, and the independent numerical
+cross-check are openly available in the repository cited in the reproducibility
+commands above, together with pinned dependency versions.  Software is released
+under the MIT licence; the manuscript, figures, and data files are released
+under CC~BY~4.0.
+
+\subsection*{Use of AI tools}
+
+The work was developed with the assistance of AI tools for algebraic
+exploration, drafting, and code generation.  Every theorem statement, proof,
+and certificate was checked by the author, who is solely responsible for all
+claims and errors.
+
+\section{Conclusion}
+
+Directional signalling can be evaluated sharply beyond isolated gates.  The
+Ising formula $|\sin2\theta|$ supplies a transparent baseline and continuous
+extension of the known CNOT point.  The principal results are the two
+nontrivial optimizer transitions.  In every finite dimension, partial SWAP
+reduces to an explicit scalar convex minimization with
+weak branch $2\sin\phi$, transition
+$(d^2-3)/(d^2-1)$, and known SWAP endpoint $2(1-1/d^2)$.  The calculation
+of the XY line gives an exact three-regime curve, including the apparently new
+result that iSWAP reaches the global two-qubit signalling ceiling $3/2$, and a
+unique quartic root in the intermediate regime.  These
+results provide controlled
+settings in which an optimal
+autonomous effective channel changes nonperturbatively with interaction
+strength.  The axially symmetric XXZ surface is the next tractable step toward
+the full Cartan chamber.
+
+\appendix
+\section{Prior-art search and attribution boundary}
+\label{app:literature}
+
+The novelty assessment was repeated on 30 July 2026 using the primary text and
+metadata of Refs.~\cite{barsse2024,barsse2025}, arXiv title/abstract searches,
+author searches for the four authors of those papers, and forward-citation
+queries.  Search terms were combined across four groups:
+\begin{enumerate}
+ \item directional signalling, causal influence, semicausal and approximately
+ semicausal channels;
+ \item diamond distance to reduced, autonomous, or simulated subsystem
+ dynamics;
+ \item partial SWAP, collision models, homogenization, Ising, XY, and iSWAP;
+ \item Cartan two-qubit gates, operator entanglement, tensor-product-structure
+ distance, and quantum model reduction.
+\end{enumerate}
+No independent paper was found that evaluates
+Eq.~\eqref{eq:defect} continuously on the Ising, partial-SWAP, or XY/iSWAP
+families.  Searches for close phrases such as ``partial SWAP'' with ``diamond
+norm'', ``iSWAP'' with ``diamond norm'', and ``semicausal'' with ``diamond
+norm'' found no overlapping calculation.  Citation searches for
+Refs.~\cite{barsse2024,barsse2025} likewise found no follow-up evaluating these
+families.
+
+This negative search result is not a proof of novelty.  Title and abstract
+indexes can miss results stated only in the body of a paper, and terminology
+such as autonomy, intertwining defect, model reduction, or approximate
+semicausality is not standardized.  The precise attribution boundary used
+here is therefore conservative:
+\begin{itemize}
+ \item the signalling quantity and its relation to causal influence are from
+ Ref.~\cite{barsse2024};
+ \item the exact CNOT value, exact arbitrary-dimensional SWAP value,
+ depolarizing SWAP optimizer, and equal-dimension universal upper bound are
+ from Ref.~\cite{barsse2025};
+ \item the continuous-family formulas, thresholds, effective channels, and
+ matching witnesses proved here are the claimed contributions.
+\end{itemize}
+The repository records the search scope and reproducible claim audit so that
+this assessment can be updated if closer prior art is identified.
+
+\section{Audit details for the intermediate XY branch}
+\label{app:xy-audit}
+
+This appendix records the boundary and saturation details used in
+Theorem~\ref{thm:xy-middle}.  They are included to make the exact eliminations
+auditable without reconstructing the branch selection from numerical output.
+
+\subsection{Boundary exclusion and uniqueness}
+
+On the facet $w=2u-1$, Eq.~\eqref{eq:xy-middle-characteristic} satisfies
+\[
+ P_A\big|_{A=1/2,\,\ell=(1-u)/2}
+ =\frac{u(1-u)(1-C)}2>0.
+\]
+Since $P_\ell>0$, the largest eigenvalue decreases as $A$ approaches
+$1/2$; that endpoint cannot maximize the witness objective.  At $A=0$, the
+objective is
+\[
+ 2\sqrt{(u-C^2)^2+C^2S^2}.
+\]
+The maximizing $A$ is unique by the argument in the main proof.  Therefore,
+if $A=0$ is active, Danskin's theorem identifies the derivative of the
+maximized facet objective with the derivative of this displayed boundary
+function.  It vanishes only at $u=C^2$.  The derivative into $A>0$ there has
+the sign of $\Xi(C^2)$ from Eq.~\eqref{eq:xy-activity}, namely
+\[
+ C(1-C)S[2SC-(3C^3+C^2-C-1)],
+\]
+which is positive exactly after the first threshold, so $A=0$ is not active
+at the only possible stationary channel value.  Thus the middle saddle has
+$0<A<1/2$.  Direct endpoint evaluation gives
+$f'(0^+)=-2$ and $f'(1^-)=2S$, so also $0<u<1$.
+
+For fixed $u$, concavity in $A$ makes the maximizer set an interval.  Any
+nontrivial interval would make the cubic
+$P(\ell;A,u)$ vanish identically in $A$, contradicting the coefficient
+$-\Theta$ of $A^3$.  For fixed $C$, convexity in $u$ makes the minimizer set
+an interval.  A flat portion on the $A=0$ boundary is excluded by strict
+convexity of the displayed square root.  In the interior it would force the
+$A$-discriminant polynomial $\mathcal R$ in the main proof to vanish identically in
+$u$, including its leading coefficient $(1-C)^2-8\ell$.  This contradicts
+$4\ell\geq2SC>1/2$ from
+Eq.~\eqref{eq:xy-middle-lower-window}.  Hence both optimizers are unique, and Berge's theorem
+gives their continuity in $C$.
+
+\subsection{Multiplier elimination and saturation ledger}
+
+The zero-multiplier calculation starts from the unrestricted characteristic
+polynomial and the equations
+\[
+ P=0,\qquad P_A=0,\qquad P_u+2P_w=0,\qquad G=0.
+\]
+The physical interior permits saturation by
+\[
+ A,\ B,\ u,\ 1-u,\ C,\ 1-C^2,\ \ell,\ P_\ell,\ \Psi.
+\]
+Every factor is nonzero: the boundary factors were excluded above;
+$0<C<1$ and $\ell>0$ hold in the middle interval;
+$P_\ell>0$ follows from the simple positive eigenvalue; and
+$\Psi>0$ follows from its negative discriminant.  The substitution
+$B=(u-C)\ell/\Psi$ therefore loses no physical solution.  The remaining
+generic component $u=-2\ell$ is incompatible with $u,\ell>0$.
+After these exclusions, the saturated elimination ideal in
+$\mathbb{Q}[C]$ is generated by $5C^3+C^2+3C-1$.  It vanishes only at
+$\theta_2$, establishing the nonvanishing multiplier used in the KKT
+argument.  The optional symbolic script also prints the unsaturated resultant
+factors and the justification for excluding each one.
+
+\subsection{Rational enclosure of the threshold interval}
+
+The elimination bounds below use a rational window rather than decimal
+approximations.  In the tangent variable, the first and second threshold
+polynomials are
+\[
+ p_1(t)=t^6-2t^5-3t^4+7t^2+2t-1,\qquad
+ p_2(t)=t^3+t^2-1.
+\]
+Exact evaluation gives
+\[
+ p_1(1/4)=-\frac{311}{4096}<0,\qquad
+ p_1(27/100)=\frac{31874409089}{10^{12}}>0,
+\]
+and
+\[
+ p_2(3/4)=-\frac1{64}<0,\qquad
+ p_2(19/25)=\frac{259}{15625}>0.
+\]
+Using the uniqueness of the positive threshold roots therefore gives
+\[
+ \frac14<\tan\theta_1<\frac{27}{100}
+ <\frac34<\tan\theta_2<\frac{19}{25}.
+\]
+This both justifies the enclosing interval $[1/4,19/25]$ and supplies the
+$t<27/100$ bound used in the weak-branch principal-minor estimate.
+
+\subsection{Physical sheet, resultant, and root isolation}
+
+Put $a=2A$ and
+$F=64(1+t^2)^2P(\Delta/4;a/2,u)=P_2u^2+P_1u+P_0$.
+At the saddle $F_u=0$, and direct factorization gives
 \[
  \operatorname{disc}_uF=4W_+(a,\Delta,t)W_+(a,\Delta,-t),
 \]
@@ -801,22 +1548,28 @@ where
  +\frac{8\Delta(1-a)t}{1+t^2}
  \left(\frac{2at^2+1-t^2}{1+t^2}\right)\right].
 \]
-For $t\in[1/4,19/25]$, $\Delta\geq1/2$, and $0\leq a\leq1$, an elementary
-rearrangement gives
+With $\sigma=t^2/(1+t^2)$ and $b=1-a$, the conjugate sheet obeys the exact
+rearrangement
 \[
  -\frac{W_+(a,\Delta,-t)}{(1+t^2)^2}
- \geq\frac{171381}{972196}>0.
+ =(1+b)\Delta^2+4b\Delta\kappa-16(1-b)b^2\sigma^2,
 \]
-Thus the physical saddle lies on $W_+=0$, without numerical sheet selection.
+where
+\[
+ \kappa=SC-2a\sigma(1-S)\geq S+C-1>0.
+\]
+Using $a(1-a)\leq1/4$, $\Delta\geq1/2$, and
+$t\in[1/4,19/25]$ gives the rational lower bound
+$171381/972196$.  Thus the conjugate sheet cannot contain the physical
+saddle.
 
-The second stationary equation, after using the linear equation $F_u=0$, is
-$G_8(a,\Delta,t)=0$.  If $P_k$ denote the coefficients of $F$ above, it can
-be defined without expansion by
+The second stationary equation, after using $F_u=0$, is
+$G_8(a,\Delta,t)=0$, defined without expansion by
 \[
  -16G_8=(\partial_aP_2)P_1^2
  -2P_1(\partial_aP_1)P_2+4(\partial_aP_0)P_2^2.
 \]
-Exact elimination of $a$ gives
+Exact elimination gives
 \begin{align*}
  \operatorname{Res}_a(W_+,G_8)
  ={}&-2^{36}\Delta^{12}t^{28}(1+t^2)^{10}E_1E_2^2Q_+(\Delta,t),\\
@@ -824,9 +1577,9 @@ Exact elimination of $a$ gives
  E_2={}&\Delta(1+t^2)^2+2(1+t)^2(1+2t-t^2).
 \end{align*}
 Both $E_1$ and $E_2$ are strictly positive for $0<t<1$ and
-$\Delta>0$, proving $Q_+(\Delta,t)=0$.
+$\Delta>0$, so the physical saddle satisfies $Q_+(\Delta,t)=0$.
 
-Finally,
+For root isolation,
 \begin{align*}
  Q_+(1/2,t)&=\frac1{16}
  (2484t^7+2565t^6+2349t^5+3119t^4+2014t^3
@@ -843,191 +1596,18 @@ with
  N_9(t)=27t^9+378t^8+1026t^7+2106t^6+2772t^5
  +2646t^4+1658t^3+678t^2+141t+16.
 \]
-The discriminant is nonzero there.  Hence the root count in $(1/2,2)$ is
-constant, and a Sturm count at $t=1/2$ gives one.  Direct substitution of the
-weak and strong values produces the squared threshold factors
+The leading coefficient $(1+t^2)^2(t^2+t+1)$ and the discriminant are
+nonzero there, preventing roots from entering, leaving, colliding, or
+escaping to infinity.  The exact Sturm variation difference at $t=1/2$ is
+one between $\Delta=1/2$ and $\Delta=2$.
+
+Finally, substituting the weak and strong values into $Q_+$ produces,
+respectively, the squared threshold factors
 \[
- (t^6-2t^5-3t^4+7t^2+2t-1)^2,\qquad
- (t^3+t^2-1)^2,
+ p_1(t)^2,\qquad p_2(t)^2,
 \]
-respectively, with strictly positive cofactors.  The middle root therefore
-joins both closed branches exactly.
-\end{proof}
-
-The full curve satisfies
-$\delta_A(\theta)=\delta_A(\pi/2-\theta)$ and returns to zero at
-$\theta=\pi/2$, where $U_{\pi/2}=Z\otimes Z$.
-
-\section{Discussion}
-
-The three families exhibit different mechanisms.  In the Ising family, one
-dephasing channel is optimal for every coupling, and two product inputs already
-witness the exact defect.  Along the partial-SWAP family, the optimal effective
-channel itself changes: it remains the identity until
-$\sin\phi=(d^2-3)/(d^2-1)$, then moves into the depolarizing interval and
-reaches complete depolarization at SWAP.  The optimal diamond witness likewise
-generally uses a reference system, as encoded by a purification of the
-symmetric/antisymmetric density in
-Lemma~\ref{lem:fixed}.
-
-The XY line has less symmetry and a genuine active-set phase diagram.  Its weak
-branch is controlled by the one-excitation witness, its central iSWAP branch by
-the maximally mixed witness, and the intervening interval moves through an
-algebraic saddle.  The iSWAP value $3/2$ equals the qubit SWAP value despite the
-gates belonging to different local-equivalence classes.
-
-The threshold is operational rather than spectral: it is where the outer
-channel optimization first benefits from adding depolarization.  It is not
-visible from operator entanglement alone.  This supplies a concrete example in
-which a coarse-grained autonomy question differs from a Hilbert--Schmidt
-interaction diagnostic.
-
-The result is limited in three important ways.  First, Eq.~\eqref{eq:defect}
-is a pre-existing signalling measure, not a newly defined quantity.  Second,
-the exact CNOT and SWAP endpoints are prior results
-\cite{barsse2025}; the contribution here is the continuous-family evaluation.
-Third, a closed formula for a generic two-qubit Cartan interaction
-$e^{-i(\alpha XX+\beta YY+\gamma ZZ)}$ remains open.  Joint-Pauli symmetry
-reduces the latter problem to optimization over the Pauli-channel tetrahedron, but
-the three leakage sectors interfere in trace norm and the partial-SWAP
-$U(2)$ symmetry is absent.
-
-\section{Reproducibility}
-
-The accompanying repository implements finite-dimensional certificates over
-the Gaussian rationals $\mathbb{Q}(i)$.  It verifies the Ising residual
-factorization, the physical product-state witness, the equal-Cartan/partial-SWAP
-identity, exact qubit, qutrit, and dimension-four weak-branch values, the
-negative depolarizing boundary, the SWAP endpoint, rational points on both
-closed XY branches including iSWAP, and the middle-branch quartic controls.
-The focused suite is
-run from the repository root with
-\begin{verbatim}
-python3 -m unittest discover -s tests -p 'test_aqc_*.py' -v
-\end{verbatim}
-The larger symbolic identities in Theorem~\ref{thm:xy-middle} can be
-regenerated independently with the optional proof dependencies:
-\begin{verbatim}
-python3 -m pip install -e '.[proof]'
-python3 tools/derive_xy_middle.py
-\end{verbatim}
-The plotted data are generated without third-party Python dependencies:
-\begin{verbatim}
-python3 paper/generate_xy_plot.py
-\end{verbatim}
-The code is a certificate and regression harness; the analytic proofs above do
-not depend on floating-point optimization.  The exact harness covers an
-interior point of the weak branch and the SWAP boundary of the strong branch;
-the generic interior strong-branch result is certified analytically by
-Eqs.~\eqref{eq:general-roots}--\eqref{eq:scalar-min}, not by encoding its
-generally algebraic minimizer in the rational backend.
-
-\section{Conclusion}
-
-Directional signalling can be evaluated sharply beyond isolated gates.
-For two-qubit Ising interactions it is $|\sin2\theta|$.  In every finite
-dimension, partial SWAP reduces to an explicit scalar convex minimization with
-weak branch $2\sin\phi$, transition
-$(d^2-3)/(d^2-1)$, and known SWAP endpoint $2(1-1/d^2)$.  The calculation
-of the XY line gives an exact three-regime curve, including the new iSWAP
-endpoint $3/2$ and a unique quartic root in the intermediate regime.  These
-results provide controlled
-settings in which an optimal
-autonomous effective channel changes nonperturbatively with interaction
-strength.  The axially symmetric XXZ surface is the next tractable step toward
-the full Cartan chamber.
-
-\appendix
-\section{Audit details for the intermediate XY branch}
-\label{app:xy-audit}
-
-This appendix records the boundary and saturation details used in
-Theorem~\ref{thm:xy-middle}.  They are included to make the exact eliminations
-auditable without reconstructing the branch selection from numerical output.
-
-\subsection{Boundary exclusion and uniqueness}
-
-On the facet $w=2u-1$, Eq.~\eqref{eq:xy-middle-characteristic} satisfies
-\[
- P_A\big|_{A=1/2,\,\lambda=(1-u)/2}
- =\frac{u(1-u)(1-C)}2>0.
-\]
-Since $P_\lambda>0$, the largest eigenvalue decreases as $A$ approaches
-$1/2$; that endpoint cannot maximize the witness objective.  At $A=0$, the
-objective is
-\[
- 2\sqrt{(u-C^2)^2+C^2S^2}.
-\]
-Its only stationary point is $u=C^2$.  The derivative into $A>0$ there has
-the sign of
-\[
- C(1-C)S[2SC-(3C^3+C^2-C-1)],
-\]
-which is positive exactly after the first threshold.  Thus the middle saddle
-has $0<A<1/2$.  Direct endpoint evaluation gives
-$f'(0^+)=-2$ and $f'(1^-)=2S$, so also $0<u<1$.
-
-For fixed $u$, concavity in $A$ makes the maximizer set an interval.  Any
-nontrivial interval would make the cubic
-$P(\lambda;A,u)$ vanish identically in $A$, contradicting the coefficient
-$-\Theta$ of $A^3$.  For fixed $C$, convexity in $u$ makes the minimizer set
-an interval.  A flat portion on the $A=0$ boundary is excluded by strict
-convexity of the displayed square root.  In the interior it would force the
-$A$-discriminant polynomial $R$ in the main proof to vanish identically in
-$u$, including its leading coefficient $(1-C)^2-8\lambda$.  This contradicts
-$4\lambda\geq2SC>1/2$.  Hence both optimizers are unique, and Berge's theorem
-gives their continuity in $C$.
-
-\subsection{Multiplier elimination and saturation ledger}
-
-The zero-multiplier calculation starts from the unrestricted characteristic
-polynomial and the equations
-\[
- P=0,\qquad P_A=0,\qquad P_u+2P_w=0,\qquad G=0.
-\]
-The physical interior permits saturation by
-\[
- A,\ B,\ u,\ 1-u,\ C,\ 1-C^2,\ \lambda,\ P_\lambda,\ \Psi.
-\]
-Every factor is nonzero: the boundary factors were excluded above;
-$0<C<1$ and $\lambda>0$ hold in the middle interval;
-$P_\lambda>0$ follows from the simple positive eigenvalue; and
-$\Psi>0$ follows from its negative discriminant.  The substitution
-$B=(u-C)\lambda/\Psi$ therefore loses no physical solution.  The remaining
-generic component $u=-2\lambda$ is incompatible with $u,\lambda>0$.
-After these exclusions, the saturated elimination ideal in
-$\mathbb{Q}[C]$ is generated by $5C^3+C^2+3C-1$.  It vanishes only at
-$\theta_2$, establishing the nonvanishing multiplier used in the KKT
-argument.  The optional symbolic script also prints the unsaturated resultant
-factors and the justification for excluding each one.
-
-\subsection{Physical sheet and root isolation}
-
-With $\sigma=t^2/(1+t^2)$ and $b=1-a$, the conjugate sheet obeys the exact
-rearrangement
-\[
- -\frac{W_+(a,\Delta,-t)}{(1+t^2)^2}
- =(1+b)\Delta^2+4b\Delta\kappa-16(1-b)b^2\sigma^2,
-\]
-where
-\[
- \kappa=SC-2a\sigma(1-S)\geq S+C-1>0.
-\]
-Using $a(1-a)\leq1/4$, $\Delta\geq1/2$, and
-$t\in[1/4,19/25]$ gives the rational lower bound
-$171381/972196$.  Thus the conjugate sheet cannot contain the physical
-saddle.  The resultant in the main proof then forces $Q_+=0$ because all its
-remaining factors are strictly positive.
-
-The leading coefficient of $Q_+$ is
-\[
- (1+t^2)^2(t^2+t+1)>0.
-\]
-The endpoint signs and nonzero discriminant displayed in the main proof
-prevent roots from entering, leaving, colliding, or escaping to infinity on
-the enclosing interval.  The exact Sturm variation difference at $t=1/2$ is
-one between $\Delta=1/2$ and $\Delta=2$.  Hence the physical root is unique
-throughout the middle regime.
+with strictly positive cofactors on the enclosing window.  Hence the unique
+physical root joins both closed branches exactly.
 
 \begin{thebibliography}{99}
 
@@ -1072,6 +1652,25 @@ J.~Watrous, \emph{The Theory of Quantum Information}
 P.~Zanardi, ``Entanglement of quantum evolutions,''
 \emph{Phys. Rev. A} \textbf{63}, 040304(R) (2001),
 \href{https://arxiv.org/abs/quant-ph/0010074}{arXiv:quant-ph/0010074}.
+
+\bibitem{beny2010}
+C.~B\'eny and O.~Oreshkov,
+``General conditions for approximate quantum error correction and
+near-optimal recovery channels,''
+\emph{Phys. Rev. Lett.} \textbf{104}, 120501 (2010),
+\href{https://arxiv.org/abs/0907.5391}{arXiv:0907.5391}.
+
+\bibitem{andreadakis2025}
+F.~Andreadakis and P.~Zanardi,
+``Tensor product structure geometry under unitary channels,''
+\emph{Quantum} \textbf{9}, 1668 (2025),
+\href{https://arxiv.org/abs/2410.02911}{arXiv:2410.02911}.
+
+\bibitem{grigoletto2025}
+T.~Grigoletto, Y.~Tao, F.~Ticozzi, and L.~Viola,
+``Exact model reduction for continuous-time open quantum dynamics,''
+\emph{Quantum} \textbf{9}, 1814 (2025),
+\href{https://arxiv.org/abs/2412.05102}{arXiv:2412.05102}.
 
 \bibitem{ziman2002}
 M.~Ziman, P.~Stelmachovic, V.~Buzek, M.~Hillery, V.~Scarani, and N.~Gisin,

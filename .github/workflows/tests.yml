@@ -29,3 +29,51 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -e '.[proof]'
       - run: python tools/derive_xy_middle.py
+      - run: python tools/verify_block_reductions.py
+
+  numerical-crosscheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e '.[numerical]'
+      - run: python tools/check_numerical_sdp.py --full
+
+  manuscript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-extra texlive-fonts-recommended
+      - run: python paper/generate_xy_plot.py
+      - name: Check generated figure data is tracked and unchanged
+        run: |
+          set -euo pipefail
+          files="paper/xy_curve.dat paper/xy_curve.svg \
+                 paper/partial_swap_phase.dat paper/xy_phase.dat"
+          # A plain `git diff --exit-code` silently ignores untracked files, so
+          # an unregistered output would pass vacuously.  Require tracking
+          # first, then use porcelain status to catch modified *and* untracked.
+          for f in $files; do
+            if ! git ls-files --error-unmatch "$f" >/dev/null 2>&1; then
+              echo "::error::$f is generated but not tracked by git" >&2
+              exit 1
+            fi
+          done
+          if [ -n "$(git status --porcelain -- $files)" ]; then
+            echo "::error::regenerated figure data differs from committed data" >&2
+            git status --porcelain -- $files >&2
+            git diff -- $files >&2
+            exit 1
+          fi
+      - working-directory: paper
+        run: |
+          pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex
+          pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex

@@ -13,6 +13,7 @@ from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parent.parent
 PROOF_SCRIPT = REPOSITORY_ROOT / "tools" / "derive_xy_middle.py"
+BLOCK_SCRIPT = REPOSITORY_ROOT / "tools" / "verify_block_reductions.py"
 PYPROJECT = REPOSITORY_ROOT / "pyproject.toml"
 
 REQUIRED_DERIVATIONS = (
@@ -24,6 +25,7 @@ REQUIRED_DERIVATIONS = (
     "check_quartic_discriminant",
     "check_root_window",
     "check_threshold_joining",
+    "check_threshold_window",
     "check_sturm_root_count",
 )
 
@@ -40,6 +42,15 @@ class ProofScriptSmokeTests(unittest.TestCase):
         self.assertTrue(PROOF_SCRIPT.is_file())
         self.assertIsInstance(self.tree, ast.Module)
         self.assertTrue(ast.get_docstring(self.tree))
+
+    def test_block_reduction_script_is_independent_and_exact(self):
+        source = BLOCK_SCRIPT.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(BLOCK_SCRIPT))
+        self.assertTrue(ast.get_docstring(tree))
+        self.assertNotIn("quantum_coarse_graining", source)
+        self.assertNotIn("numpy", source)
+        self.assertNotIn("cvxpy", source)
+        self.assertIn("charpoly", source)
 
     def test_derivations_are_split_into_documented_functions(self):
         functions = {
@@ -108,6 +119,7 @@ class ProofScriptSmokeTests(unittest.TestCase):
                 "quartic-discriminant",
                 "root-window",
                 "threshold-joining",
+                "threshold-window",
                 "sturm-count",
             ],
         )

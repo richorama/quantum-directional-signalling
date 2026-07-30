@@ -80,7 +80,7 @@ ALPHA, GAMMA, GG, HH, BETA_R, BETA_I = sp.symbols(
 X = sp.Symbol("x")
 
 # Certified windows.  The tangent window brackets the intermediate interval
-# (tan theta_1 = 0.2637..., tan theta_2 = 0.7548...) and Delta = delta_A lies in
+# (tan theta_1 = 0.2641..., tan theta_2 = 0.7548...) and Delta = delta_A lies in
 # the root window (1/2, 2).
 T_WINDOW = (sp.Rational(1, 4), sp.Rational(19, 25))
 DELTA_WINDOW = (sp.Rational(1, 2), sp.Integer(2))
@@ -531,6 +531,25 @@ def check_normal_derivative(report: Report) -> None:
             - C * (1 - C) * ((1 + C) + S * C) / 2
         ),
     )
+    n_value = (U - C**2) ** 2 + C**2 * S**2
+    m_value = (U - C) ** 2 + S**2
+    theta_value = U * (1 - U) * (1 - C) ** 2
+    activity_at_threshold = (
+        ((1 - U) * n_value + theta_value - C * S * (2 * n_value - m_value))
+        .subs(U, C**2)
+    )
+    report.check(
+        "boundary: Xi(C^2) equals the published A=0 activity expression",
+        is_zero(
+            reduce_pythagorean(
+                activity_at_threshold
+                - C
+                * (1 - C)
+                * S
+                * (2 * S * C - (3 * C**3 + C**2 - C - 1))
+            )
+        ),
+    )
 
 
 def check_zero_multiplier_elimination(report: Report) -> None:
@@ -928,6 +947,34 @@ def check_threshold_joining(report: Report) -> None:
     )
 
 
+def check_threshold_window(report: Report) -> None:
+    """Certify the rational window containing both XY thresholds."""
+    first_threshold = (
+        T**6 - 2 * T**5 - 3 * T**4 + 7 * T**2 + 2 * T - 1
+    )
+    second_threshold = T**3 + T**2 - 1
+    report.check(
+        "threshold window: p_1(1/4) = -311/4096 < 0",
+        first_threshold.subs(T, sp.Rational(1, 4))
+        == -sp.Rational(311, 4096),
+    )
+    report.check(
+        "threshold window: p_1(27/100) > 0",
+        first_threshold.subs(T, sp.Rational(27, 100))
+        == sp.Rational(31874409089, 10**12),
+    )
+    report.check(
+        "threshold window: p_2(3/4) = -1/64 < 0",
+        second_threshold.subs(T, sp.Rational(3, 4))
+        == -sp.Rational(1, 64),
+    )
+    report.check(
+        "threshold window: p_2(19/25) = 259/15625 > 0",
+        second_threshold.subs(T, sp.Rational(19, 25))
+        == sp.Rational(259, 15625),
+    )
+
+
 def check_sturm_root_count(report: Report) -> None:
     """Item 6: an exact Sturm count, never a floating-point root call."""
     quartic = middle_quartic()
@@ -948,6 +995,7 @@ CHECKS: Tuple[Tuple[str, Callable[[Report], None]], ...] = (
     ("quartic-discriminant", check_quartic_discriminant),
     ("root-window", check_root_window),
     ("threshold-joining", check_threshold_joining),
+    ("threshold-window", check_threshold_window),
     ("sturm-count", check_sturm_root_count),
 )
 
