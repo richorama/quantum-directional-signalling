@@ -102,10 +102,9 @@ submitted or advertised as a stable citable artefact.
       and enable `richorama/quantum-directional-signalling` before creating
       the release. Zenodo uses `CITATION.cff` as the archive metadata when no
       `.zenodo.json` file is present.
-- [ ] **Archived DOI.** Deposit a release on Zenodo (or equivalent). After
-      Zenodo mints the DOI, add `doi:` to `CITATION.cff` on `main` and add a
-      badge in `README.md`; the Zenodo landing page remains the source of
-      record for the first archived snapshot.
+- [x] **Archived DOI.** Zenodo archived `v0.1.0` as
+      <https://doi.org/10.5281/zenodo.21706516>. The DOI is recorded in
+      `CITATION.cff` on `main` and displayed in `README.md`.
 - [x] **Tagged release.** The archived commit records version `0.1.0` and its
       release date in `CITATION.cff`; the matching GitHub release is tagged
       `v0.1.0`.

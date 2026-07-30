@@ -1,6 +1,7 @@
 # Quantum Directional Signalling
 
 [![tests](https://github.com/richorama/quantum-directional-signalling/actions/workflows/tests.yml/badge.svg)](https://github.com/richorama/quantum-directional-signalling/actions/workflows/tests.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21706516.svg)](https://doi.org/10.5281/zenodo.21706516)
 
 Exact diamond-norm evaluations of directional signalling for continuous
 bipartite unitary families.
@@ -145,9 +146,9 @@ development: it checks the unreduced optimization and is not used as proof.
 The repository contains a journal-style draft, not a peer-reviewed
 publication. The novelty statements are therefore phrased as
 "to our knowledge" and remain subject to independent literature review.
-Before citing a stable release, use its Zenodo landing page. The release date
-is added to `CITATION.cff` before tagging, and the DOI is added on `main` after
-Zenodo creates the archive.
+The archived `v0.1.0` release is available at
+<https://doi.org/10.5281/zenodo.21706516>. Use that version-specific DOI when
+citing the results reproduced by this release.
 
 Outstanding pre-publication items are tracked in the "Outstanding before
 publication" section of [`AUDIT.md`](AUDIT.md); after the `v0.1.0` archive,
