@@ -45,7 +45,8 @@
 \title{\bfseries Exact directional signalling for Ising,
 partial-SWAP, and XY unitary families}
 
-\author{Richard Astbury\thanks{Contact:
+\author{Richard Astbury\\
+\normalsize Independent Researcher\thanks{Contact:
 \href{mailto:richard.astbury@gmail.com}{richard.astbury@gmail.com}.
 Developed with the assistance of AI tools. The author is solely responsible
 for all claims, proofs, code, and errors.}}
@@ -134,17 +135,21 @@ below.  It further proves the universal bound
 for equal local dimension $d$, with equality at SWAP, and uses covariance to
 identify the completely depolarizing effective channel there.  Our
 partial-SWAP endpoint uses that precedent; the contribution is the continuous
-family and its threshold.  Earlier work characterized causal and semicausal operations
-structurally~\cite{beckman2001,eggeling2002}, while continuity of Stinespring
-dilations supplies general non-sharp bounds~\cite{ksw2008}.
+family and its threshold.  Earlier work characterized causal and semicausal
+operations structurally~\cite{beckman2001,eggeling2002}.  In the present
+notation, $\delta_A(U)=0$ is exactly semicausality from $B$ to $A$: the
+reduced output on $A$ then factors through the reduced input on $A$.
+Continuity of Stinespring dilations supplies general non-sharp
+bounds~\cite{ksw2008}.
 
 The present contribution is deliberately narrower than a new causal measure.
 The Ising calculation is a transparent baseline that fixes the subsystem and
 diamond-norm conventions while extending the known CNOT endpoint to its
-continuous Cartan axis.  The two substantive results are the
+continuous Cartan axis~\cite{zhang2003}.  The two substantive results are the
 arbitrary-dimensional partial-SWAP reduction and the complete XY/iSWAP phase
 diagram.  Partial SWAP is used in homogenization and collision models
-\cite{ziman2002,scarani2002} and here exhibits the dimension-dependent
+\cite{ziman2002,scarani2002,ciccarello2022} and here exhibits the
+dimension-dependent
 transition $\sin\phi=(d^2-3)/(d^2-1)$.  The less symmetric XY line has three
 analytic regimes, an algebraic quartic in the middle, and an iSWAP endpoint
 that saturates the global two-qubit bound.  A systematic search of the
@@ -172,7 +177,10 @@ Likewise, tensor-product-structure geometry
 \cite{beny2010}, and exact Lindblad model reduction
 \cite{grigoletto2025} address related questions of subsystem structure,
 recoverability, and reduced description, but optimize different objects and
-do not yield Eq.~\eqref{eq:defect}.
+do not yield Eq.~\eqref{eq:defect}.  Operational quantum mereology also seeks
+dynamically preferred, minimally scrambled subsystems~\cite{zanardi2024}, but
+uses short-time scrambling diagnostics rather than worst-case diamond-norm
+channel simulation.
 
 \subsection*{Operational picture}
 
@@ -348,7 +356,7 @@ bound.
 
 At $\theta=\pi/4$, $U_\theta$ is locally equivalent to CZ and CNOT.
 Equation~\eqref{eq:ising-result} then reproduces the exact CNOT value one,
-already obtained in Refs.~\cite{barsse2024,barsse2025}.  The continuous
+already obtained in Ref.~\cite{barsse2025}.  The continuous
 formula, rather than that endpoint, is the result of
 Theorem~\ref{thm:ising}.
 
@@ -360,7 +368,7 @@ Let $A\cong B\cong\mathbb{C}^d$ and consider
  \label{eq:partial-swap}
 \end{equation}
 for $0\leq\phi\leq\pi/2$.  For qubits, the equal-angle Cartan interaction is
-this family up to global phase:
+this family up to global phase~\cite{zhang2003}:
 \[
  e^{-it(XX+YY+ZZ)}=e^{it}e^{-2it\SWAP},\qquad \phi=2t.
 \]
@@ -995,16 +1003,17 @@ vertices $(0,-1)$, $(1,1)$, and $(-1,1)$, and the facet $q_Z=0$ is the edge
 $w=2u-1$.  The fixed-channel diamond norm
 $F(u,w)=\diamondnorm{\cN-\cE_{u,w}\cT}$ is convex and continuous on
 $\mathcal T$, being the norm of a map affine in $(u,w)$.
-\item[(ii)] \emph{(Concavity and a unique saddle.)}  For fixed $(u,w)$ the
+\item[(ii)] \emph{(Concavity and saddle existence.)}  For fixed $(u,w)$ the
 Watrous primal value is concave in the invariant witness parameter
-$A\in[0,1/2]$, and its maximizer $A_*(u,w)$ is unique.  Consequently
-$F$ is a convex--concave min--max whose value is attained at a saddle, and
-by Berge's maximum theorem the saddle depends continuously on $\theta$.
-\item[(iii)] \emph{(Sufficiency.)}  Suppose $(u_\star,w_\star)$ lies on the
-edge $w=2u-1$, the directional derivative of $F$ along that edge vanishes,
-and $F$ admits a subgradient whose normal component points into
-$q_Z\geq0$.  Then $(u_\star,w_\star)$ minimizes $F$ over the whole triangle
-$\mathcal T$, not merely over the edge.
+$A\in[0,1/2]$.  Consequently the optimization is convex--concave and its
+min--max value is attained at a saddle.  On any parameter interval where both
+the maximizing witness and the minimizing channel are unique, Berge's maximum
+theorem makes their coordinates continuous.
+\item[(iii)] \emph{(Sufficiency.)}  Suppose $(u_\star,w_\star)$ lies in the
+relative interior of the edge $w=2u-1$, the directional derivative of $F$
+along that edge vanishes, and $F$ admits a subgradient whose normal component
+points into $q_Z\geq0$.  Then $(u_\star,w_\star)$ minimizes $F$ over the
+whole triangle $\mathcal T$, not merely over the edge.
 \end{enumerate}
 \end{lemma}
 
@@ -1016,18 +1025,16 @@ functions on a polytope are continuous.
 
 (ii) The feasible pairs $(\rho,Y)$ of the Watrous primal form a convex set
 and the objective is linear, so the value is concave in $\rho$; the invariant
-density is affine in $A$, giving concavity in $A$.  Uniqueness is proved with
-Eq.~\eqref{eq:xy-middle-characteristic} below: a maximizing interval would
-force the cubic $P(\ell;A,u)$ to vanish identically in $A$, contradicting the
-leading coefficient $-\Theta$.  A convex--concave function on a product of
-compact convex sets has a saddle by Sion's minimax theorem, and the
-maximum theorem gives continuity of the saddle correspondence; single-valued
-continuity follows from the uniqueness just established.
+density is affine in $A$, giving concavity in $A$.  A convex--concave
+function on a product of compact convex sets has a saddle by Sion's minimax
+theorem.  Berge's maximum theorem gives upper hemicontinuity of the optimizer
+correspondences; when each is single-valued, this is ordinary continuity.
 
 (iii) This is the standard first-order condition for a convex function on a
 polytope.  Vanishing derivative along the edge together with a subgradient
-whose normal component points inward means that some subgradient lies in the
-normal cone of $\mathcal T$ at $(u_\star,w_\star)$, i.e.\
+whose normal component points inward means that the negative of some
+subgradient lies in the outward normal cone of $\mathcal T$ at
+$(u_\star,w_\star)$, i.e.\
 $0\in\partial F(u_\star,w_\star)+N_{\mathcal T}(u_\star,w_\star)$.  For a
 convex $F$ this normal-cone inclusion is sufficient, not merely necessary,
 for a global minimum over $\mathcal T$.  In particular no other edge or
@@ -1105,10 +1112,10 @@ $A>0$.
 
 For fixed channel parameters, the diamond-SDP value is concave in its input
 density, and the resulting facet objective $f(u)$ is convex and continuous,
-by Lemma~\ref{lem:facet}(i)--(ii); the uniqueness of the maximizing $A$ is the
-argument promised there, namely that an interval of maximizing $A$ values
-would make the cubic $P(\ell;A,u)$ vanish identically despite its leading
-coefficient $-\Theta$.
+by Lemma~\ref{lem:facet}(i)--(ii).  In the interior the maximizing $A$ is
+unique: concavity makes its maximizer set an interval, while a nontrivial
+interval would make the cubic $P(\ell;A,u)$ vanish identically in $A$ despite
+its nonzero leading coefficient $-\Theta$.
 If its unique maximizing witness were $A=0$, Danskin's theorem would give
 \[
  f'(u)=\frac{2(u-C^2)}
@@ -1135,11 +1142,16 @@ If $A=0$ on a subinterval, the boundary value
 $2\sqrt{(u-C^2)^2+C^2S^2}$ is strictly convex and cannot be constant.
 Hence any flat interval contains an open subinterval with $0<A<1/2$, where
 the displayed discriminant applies.
-Constancy on an interval would force $\mathcal R$ to vanish identically in $u$, hence
+At every point of that subinterval, witness stationarity gives
+$P=P_A=0$, so eliminating $A$ makes
+$\operatorname{disc}_A P$ vanish at the same fixed value of $\ell$.
+Constancy on an interval would therefore force
+$\mathcal R(u,\ell,C)$ to vanish identically as a polynomial in $u$, hence
 $4\ell=(1-C)^2/2<1/2$, whereas the $A=0$ witness gives
 $4\ell\geq2SC>1/2$ by
-Eq.~\eqref{eq:xy-middle-lower-window}.  The facet saddle is therefore unique and varies
-continuously.
+Eq.~\eqref{eq:xy-middle-lower-window}.  Both optimizer coordinates are
+therefore unique, and Lemma~\ref{lem:facet}(ii) makes the facet saddle
+continuous in $\theta$.
 
 It remains to check the normal KKT multiplier.  Holding $w$ fixed before
 restricting to the facet gives
@@ -1160,12 +1172,13 @@ limiting weak saddle has $A=0$, $u=C^2$, $\ell=SC/2$, and
  G=\frac{C(1-C)}2[(1+C)+SC]>0.
 \]
 Therefore $G>0$ throughout $(\theta_1,\theta_2)$: by
-Lemma~\ref{lem:facet}(ii) the facet saddle varies continuously in $\theta$, so
-$G$ can change sign on the open interval only by vanishing there, and the
-elimination above shows that this happens only at $\theta_2$.  The gradient of
-the convex channel objective is then a positive multiple of the inward normal
-to $q_Z\geq0$: tangential stationarity gives zero directional derivative along
-the facet, while $G>0$ supplies a subgradient with inward normal component.
+the continuity just proved, the facet saddle varies continuously in $\theta$,
+so $G$ can change sign on the open interval only by vanishing there, and the
+elimination above shows that this happens only at $\theta_2$.  The gradient
+of the convex channel objective is then a positive multiple of the inward
+normal to $q_Z\geq0$: tangential stationarity gives zero directional
+derivative along the facet, while $G>0$ supplies a subgradient with inward
+normal component, whose negative lies in the outward normal cone.
 Lemma~\ref{lem:facet}(iii) applies verbatim, so the facet point is the global
 minimizer over the entire CPTP triangle, and no other edge or vertex needs to
 be examined.
@@ -1264,8 +1277,10 @@ branch is controlled by the one-excitation witness, its central iSWAP branch by
 the maximally mixed witness, and the intervening interval moves through an
 algebraic saddle, as shown in Fig.~\ref{fig:xy-phase}.  The iSWAP value $3/2$
 equals the qubit SWAP value despite the
-gates belonging to different local-equivalence classes.  By the universal
-bound~\eqref{eq:universal-swap-bound}, iSWAP is therefore a maximally
+gates belonging to different local-equivalence classes in the canonical
+classification of two-qubit gates~\cite{zhang2003}.  By the universal
+bound~\eqref{eq:universal-swap-bound}, which applies to every unitary on
+$\mathbb C^2\otimes\mathbb C^2$, iSWAP is therefore a maximally
 signalling two-qubit unitary, not merely a gate that happens to share SWAP's
 value.
 
@@ -1276,7 +1291,9 @@ which a coarse-grained autonomy question differs from a Hilbert--Schmidt
 interaction diagnostic.  For repeated-interaction and homogenization models,
 the threshold also separates a regime in which the incoming visible state is
 the best autonomous predictor from one in which deliberately forgetting part
-of that state improves the worst-case prediction.
+of that state improves the worst-case prediction.  The defect is a worst-case
+channel-simulation error, however, not a communication capacity or an
+achievable signalling rate.
 
 For example, in a qubit collision with $\sin\phi=4/5$, retaining the incoming
 visible state corresponds to $\lambda=1$ and has worst-case error
@@ -1291,8 +1308,10 @@ The result is limited in three important ways.  First, Eq.~\eqref{eq:defect}
 is a pre-existing signalling measure, not a newly defined quantity.  Second,
 the exact CNOT and SWAP endpoints are prior results
 \cite{barsse2025}; the contribution here is the continuous-family evaluation.
-Third, a closed formula for a generic two-qubit Cartan interaction
-$e^{-i(\alpha XX+\beta YY+\gamma ZZ)}$ remains open.  Joint-Pauli symmetry
+Third, for a generic two-qubit interaction in the canonical Cartan
+parametrization~\cite{zhang2003},
+$e^{-i(\alpha XX+\beta YY+\gamma ZZ)}$, a closed formula remains open.
+Joint-Pauli symmetry
 reduces the latter problem to optimization over the Pauli-channel tetrahedron, but
 the three leakage sectors interfere in trace norm and the partial-SWAP
 $U(2)$ symmetry is absent.
@@ -1366,8 +1385,13 @@ This work generates no experimental data.  All figure data files in the
 regenerated and compared byte-for-byte in continuous integration.  The
 manuscript source, the exact-arithmetic certificate package, the symbolic
 proof scripts of Remark~\ref{rem:cas}, and the independent numerical
-cross-check are openly available in the repository cited in the reproducibility
-commands above, together with pinned dependency versions.  Software is released
+cross-check are openly available with pinned dependency versions at
+\begin{center}
+\url{https://github.com/richorama/quantum-directional-signalling}.
+\end{center}
+The archived release DOI and immutable version identifier should be taken from
+the repository's \texttt{CITATION.cff} file for the submitted version.
+Software is released
 under the MIT licence; the manuscript, figures, and data files are released
 under CC~BY~4.0.
 
@@ -1394,7 +1418,7 @@ results provide controlled
 settings in which an optimal
 autonomous effective channel changes nonperturbatively with interaction
 strength.  The axially symmetric XXZ surface is the next tractable step toward
-the full Cartan chamber.
+the full Cartan chamber~\cite{zhang2003}.
 
 \appendix
 \section{Prior-art search and attribution boundary}
@@ -1619,7 +1643,7 @@ K.~Barsse, P.~Perinotti, A.~Tosini, and L.~Vaglini,
 
 \bibitem{barsse2025}
 K.~Barsse, P.~Perinotti, A.~Tosini, and L.~Vaglini,
-``Disentangling signalling and causal influence'' (2025),
+``Disentangling signalling and causal influence,'' preprint (2025),
 \href{https://arxiv.org/abs/2505.14120}{arXiv:2505.14120}.
 
 \bibitem{beckman2001}
@@ -1683,6 +1707,25 @@ V.~Scarani, M.~Ziman, P.~Stelmachovic, N.~Gisin, and V.~Buzek,
 ``Thermalizing quantum machines: Dissipation and entanglement,''
 \emph{Phys. Rev. Lett.} \textbf{88}, 097905 (2002),
 \href{https://arxiv.org/abs/quant-ph/0110088}{arXiv:quant-ph/0110088}.
+
+\bibitem{ciccarello2022}
+F.~Ciccarello, S.~Lorenzo, V.~Giovannetti, and G.~M. Palma,
+``Quantum collision models: Open system dynamics from repeated
+interactions,''
+\emph{Phys. Rep.} \textbf{954}, 1 (2022),
+\href{https://arxiv.org/abs/2106.11974}{arXiv:2106.11974}.
+
+\bibitem{zhang2003}
+J.~Zhang, J.~Vala, S.~Sastry, and K.~B. Whaley,
+``Geometric theory of nonlocal two-qubit operations,''
+\emph{Phys. Rev. A} \textbf{67}, 042313 (2003),
+\href{https://arxiv.org/abs/quant-ph/0209120}{arXiv:quant-ph/0209120}.
+
+\bibitem{zanardi2024}
+P.~Zanardi, N.~Dallas, F.~Andreadakis, and S.~Lloyd,
+``Operational quantum mereology and minimal scrambling,''
+\emph{Quantum} \textbf{8}, 1406 (2024),
+\href{https://arxiv.org/abs/2212.14340}{arXiv:2212.14340}.
 
 \end{thebibliography}
 
