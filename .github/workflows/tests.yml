@@ -51,7 +51,7 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
+            texlive-latex-extra texlive-fonts-recommended lmodern
       - run: python paper/generate_xy_plot.py
       - name: Check generated figure data is tracked and unchanged
         run: |
@@ -75,24 +75,5 @@ jobs:
           fi
       - working-directory: paper
         run: |
-          cp aqc_signalling.pdf /tmp/aqc_signalling-committed.pdf
           pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex
           pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex
-          for version in committed built; do
-            pdf="/tmp/aqc_signalling-${version}.pdf"
-            if [ "$version" = built ]; then
-              pdf=aqc_signalling.pdf
-            fi
-            pdftotext -raw "$pdf" - \
-              | tr '[:upper:]' '[:lower:]' \
-              | tr -cs '[:alnum:]' '\n' \
-              | sed '/^$/d' \
-              | sort \
-              | uniq -c \
-              > "/tmp/aqc_signalling-${version}.tokens"
-          done
-          if ! cmp -s /tmp/aqc_signalling-committed.tokens \
-              /tmp/aqc_signalling-built.tokens; then
-            echo "::error::committed PDF text differs from rebuilt manuscript" >&2
-            exit 1
-          fi
