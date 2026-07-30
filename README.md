@@ -145,13 +145,14 @@ development: it checks the unreduced optimization and is not used as proof.
 The repository contains a journal-style draft, not a peer-reviewed
 publication. The novelty statements are therefore phrased as
 "to our knowledge" and remain subject to independent literature review.
-Before citing a stable release, use the version and release date in
-`CITATION.cff`; a DOI or arXiv identifier will be added only after one exists.
+Before citing a stable release, use its Zenodo landing page. The release date
+is added to `CITATION.cff` before tagging, and the DOI is added on `main` after
+Zenodo creates the archive.
 
 Outstanding pre-publication items are tracked in the "Outstanding before
 publication" section of [`AUDIT.md`](AUDIT.md); at present these are an ORCID
-iD, an archived DOI, a tagged release, an arXiv deposit, and a completed
-independent review.
+iD, enabled Zenodo archiving, an archived DOI, a tagged release, an arXiv
+deposit, and a completed independent review.
 
 ## Provenance
 

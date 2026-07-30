@@ -51,7 +51,7 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            texlive-latex-extra texlive-fonts-recommended lmodern
+            texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
       - run: python paper/generate_xy_plot.py
       - name: Check generated figure data is tracked and unchanged
         run: |
@@ -75,5 +75,11 @@ jobs:
           fi
       - working-directory: paper
         run: |
+          cp aqc_signalling.pdf /tmp/aqc_signalling-committed.pdf
           pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex
           pdflatex -interaction=nonstopmode -halt-on-error aqc_signalling.tex
+          pdftotext -layout /tmp/aqc_signalling-committed.pdf \
+            /tmp/aqc_signalling-committed.txt
+          pdftotext -layout aqc_signalling.pdf /tmp/aqc_signalling-built.txt
+          diff -u /tmp/aqc_signalling-committed.txt \
+            /tmp/aqc_signalling-built.txt

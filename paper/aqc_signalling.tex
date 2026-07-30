@@ -378,7 +378,7 @@ this family up to global phase~\cite{zhang2003}:
 The unitary $U_\phi$ commutes with $V\otimes V$ for every $V\in U(d)$.
 Lemma~\ref{lem:twirl} therefore permits an optimal effective channel to be
 chosen covariant under all unitary conjugations.  Every such channel is
-depolarizing:
+depolarizing~\cite{watrous2018}:
 \begin{equation}
  \cE_\lambda(X)
  =\lambda X+(1-\lambda)\Tr(X)\frac{I}{d},
@@ -438,8 +438,8 @@ established on a strictly larger range than is subsequently needed.
 The Watrous SDP is invariant under the simultaneous $V\otimes V$ covariance
 action.  We average the full linear primal feasible tuple, not the nonlinear
 right-hand side of Eq.~\eqref{eq:watrous}.  Affineness preserves feasibility
-and objective value, and Schur--Weyl duality then permits an optimal input
-density
+and objective value, and Schur--Weyl duality~\cite{watrous2018} then permits
+an optimal input density
 \[
  \rho=xP_-+yP_+,\qquad r_-x+r_+y=1,
  \quad r_\pm=\frac{d(d\pm1)}2.
@@ -1027,8 +1027,9 @@ functions on a polytope are continuous.
 and the objective is linear, so the value is concave in $\rho$; the invariant
 density is affine in $A$, giving concavity in $A$.  A convex--concave
 function on a product of compact convex sets has a saddle by Sion's minimax
-theorem.  Berge's maximum theorem gives upper hemicontinuity of the optimizer
-correspondences; when each is single-valued, this is ordinary continuity.
+theorem~\cite{sion1958}.  Berge's maximum theorem~\cite{berge1963} gives
+upper hemicontinuity of the optimizer correspondences; when each is
+single-valued, this is ordinary continuity.
 
 (iii) This is the standard first-order condition for a convex function on a
 polytope.  Vanishing derivative along the edge together with a subgradient
@@ -1116,7 +1117,8 @@ by Lemma~\ref{lem:facet}(i)--(ii).  In the interior the maximizing $A$ is
 unique: concavity makes its maximizer set an interval, while a nontrivial
 interval would make the cubic $P(\ell;A,u)$ vanish identically in $A$ despite
 its nonzero leading coefficient $-\Theta$.
-If its unique maximizing witness were $A=0$, Danskin's theorem would give
+If its unique maximizing witness were $A=0$, Danskin's
+theorem~\cite{danskin1967} would give
 \[
  f'(u)=\frac{2(u-C^2)}
  {\sqrt{(u-C^2)^2+C^2S^2}},
@@ -1209,7 +1211,8 @@ weak and strong regimes the lower bound is an explicitly exhibited input
 state.  Here, by contrast, the certificate is the convex--concave saddle of
 Lemma~\ref{lem:facet}(ii): the value is attained at the interior invariant
 witness $\rho(A_*)$ of the unique saddle, and Sion's minimax theorem
-guarantees that no effective channel can do better against it.  The witness is
+guarantees that no effective channel can do better against
+it~\cite{sion1958}.  The witness is
 therefore operational and matching, but it is specified algebraically as the
 saddle coordinate rather than in closed form.
 \end{proof}
@@ -1389,8 +1392,10 @@ cross-check are openly available with pinned dependency versions at
 \begin{center}
 \url{https://github.com/richorama/quantum-directional-signalling}.
 \end{center}
-The archived release DOI and immutable version identifier should be taken from
-the repository's \texttt{CITATION.cff} file for the submitted version.
+For an archived release, the Zenodo landing page records the DOI and immutable
+version identifier.  The repository's \texttt{CITATION.cff} is updated with
+that DOI after archival; before archival, the repository URL above identifies
+the evolving draft.
 Software is released
 under the MIT licence; the manuscript, figures, and data files are released
 under CC~BY~4.0.
@@ -1483,7 +1488,7 @@ objective is
  2\sqrt{(u-C^2)^2+C^2S^2}.
 \]
 The maximizing $A$ is unique by the argument in the main proof.  Therefore,
-if $A=0$ is active, Danskin's theorem identifies the derivative of the
+if $A=0$ is active, Danskin's theorem~\cite{danskin1967} identifies the
 maximized facet objective with the derivative of this displayed boundary
 function.  It vanishes only at $u=C^2$.  The derivative into $A>0$ there has
 the sign of $\Xi(C^2)$ from Eq.~\eqref{eq:xy-activity}, namely
@@ -1504,8 +1509,8 @@ convexity of the displayed square root.  In the interior it would force the
 $A$-discriminant polynomial $\mathcal R$ in the main proof to vanish identically in
 $u$, including its leading coefficient $(1-C)^2-8\ell$.  This contradicts
 $4\ell\geq2SC>1/2$ from
-Eq.~\eqref{eq:xy-middle-lower-window}.  Hence both optimizers are unique, and Berge's theorem
-gives their continuity in $C$.
+Eq.~\eqref{eq:xy-middle-lower-window}.  Hence both optimizers are unique, and
+Berge's theorem~\cite{berge1963} gives their continuity in $C$.
 
 \subsection{Multiplier elimination and saturation ledger}
 
@@ -1726,6 +1731,25 @@ P.~Zanardi, N.~Dallas, F.~Andreadakis, and S.~Lloyd,
 ``Operational quantum mereology and minimal scrambling,''
 \emph{Quantum} \textbf{8}, 1406 (2024),
 \href{https://arxiv.org/abs/2212.14340}{arXiv:2212.14340}.
+
+\bibitem{sion1958}
+M.~Sion,
+``On general minimax theorems,''
+\emph{Pacific J. Math.} \textbf{8}, 171 (1958),
+\href{https://doi.org/10.2140/pjm.1958.8.171}{DOI}.
+
+\bibitem{berge1963}
+C.~Berge,
+\emph{Topological Spaces, Including a Treatment of Multi-Valued Functions,
+Vector Spaces, and Convexity}
+(Oliver and Boyd, Edinburgh, 1963).
+
+\bibitem{danskin1967}
+J.~M. Danskin,
+\emph{The Theory of Max-Min and Its Application to Weapons Allocation
+Problems}
+(Springer, Berlin, 1967),
+\href{https://doi.org/10.1007/978-3-642-87661-6}{DOI}.
 
 \end{thebibliography}
 
