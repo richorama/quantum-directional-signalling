@@ -150,9 +150,8 @@ is added to `CITATION.cff` before tagging, and the DOI is added on `main` after
 Zenodo creates the archive.
 
 Outstanding pre-publication items are tracked in the "Outstanding before
-publication" section of [`AUDIT.md`](AUDIT.md); at present these are an ORCID
-iD, enabled Zenodo archiving, an archived DOI, a tagged release, an arXiv
-deposit, and a completed independent review.
+publication" section of [`AUDIT.md`](AUDIT.md); after the `v0.1.0` archive,
+these are an ORCID iD, an arXiv deposit, and a completed independent review.
 
 ## Provenance
 

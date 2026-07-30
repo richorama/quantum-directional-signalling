@@ -98,7 +98,7 @@ submitted or advertised as a stable citable artefact.
 - [ ] **ORCID iD.** The author does not yet have one. Register at
       <https://orcid.org> and add it to `CITATION.cff` (`orcid:` under
       `authors`) and to the manuscript author block.
-- [ ] **Zenodo integration.** Sign in to Zenodo, connect the GitHub account,
+- [x] **Zenodo integration.** Sign in to Zenodo, connect the GitHub account,
       and enable `richorama/quantum-directional-signalling` before creating
       the release. Zenodo uses `CITATION.cff` as the archive metadata when no
       `.zenodo.json` file is present.
@@ -106,10 +106,9 @@ submitted or advertised as a stable citable artefact.
       Zenodo mints the DOI, add `doi:` to `CITATION.cff` on `main` and add a
       badge in `README.md`; the Zenodo landing page remains the source of
       record for the first archived snapshot.
-- [ ] **Tagged release.** `CITATION.cff` advertises version `0.1.0`, but no
-      release is currently published. Tag the final submitted commit as
-      `v0.1.0` after adding its release date to `CITATION.cff`, then create
-      the matching GitHub release.
+- [x] **Tagged release.** The archived commit records version `0.1.0` and its
+      release date in `CITATION.cff`; the matching GitHub release is tagged
+      `v0.1.0`.
 - [ ] **arXiv posting.** Include the `paper/*.dat` files in the submission;
       the manuscript builds its figures from them through pgfplots.
 - [ ] **Independent review.** The review record below is empty. An unexecuted
